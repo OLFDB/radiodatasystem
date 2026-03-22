@@ -31,12 +31,13 @@
 #include <time.h>
 #include <wchar.h>
 #include "rds.h"
+#include "../lib/pi.h"
 
 
 static void af_print_pair(uint8_t af1, uint8_t af2)
 {
 	static uint8_t tuning_freq;
-	static first;
+	static int first;
 
 	/* 0: Not to be used */
 	/* 1..204: Carrier frequency */

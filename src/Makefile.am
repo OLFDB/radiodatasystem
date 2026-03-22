@@ -3,7 +3,7 @@ dist_man_MANS = rdsd.8 rdsdump.1 rdsradiocapture.1 rdstimed.8
 
 AM_CPPFLAGS = -I $(top_srcdir)/lib
 ACLOCAL_AMFLAGS = -I m4
-LDADD = /usr/lib/libsqlite3.la ../lib/librds.la
+LDADD = /usr/lib/sqlite3/libtclsqlite3.dylib ../lib/librds.la
 
 CONFIG_CLEAN_FILES = Makefile.in
 

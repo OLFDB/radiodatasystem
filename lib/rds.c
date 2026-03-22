@@ -55,6 +55,7 @@
 #include "ta.h"
 #include "tdc.h"
 #include "tp.h"
+#include "erp.h"
 #ifdef ODA_TMC
 #include "oda_tmc.h"
 #endif

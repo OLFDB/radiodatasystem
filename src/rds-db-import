@@ -29,7 +29,7 @@ fi
 [ -z "$DATA" ] && exit
 
 # create and import
-for FILE in $DATA/*; do
+for FILE in $DATA*; do
   TABLE=`basename "$FILE" | sed -e 's/\..*$//'`
   if [ "$TABLE" = "README" ]; then
     # jump over README.DAT
@@ -47,12 +47,12 @@ for FILE in $DATA/*; do
   echo -n " CONVERT"
   if [ "$CONV" = "UTF-8" ]; then
     COLUMNS=`head -1 "$FILE" | dos2unix | sed -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/'`
-    tail "$FILE" -n +2 | dos2unix | sed -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/' > "$FILE.tmp"
+    tail -n 2 "$FILE" | dos2unix | sed -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/' > "$FILE.tmp"
   else
     COLUMNS=`head -1 "$FILE" | dos2unix | sed -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/' | iconv -f "$CONV" -t UTF-8`
-    tail "$FILE" -n +2 | dos2unix | sed -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/' | iconv -f "$CONV" -t UTF-8 > "$FILE.tmp"
+    tail -n 2 "$FILE" | dos2unix | sed -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/' | iconv -f "$CONV" -t UTF-8 > "$FILE.tmp"
   fi
-
+break
   # to SQL
   echo -n " SQL"
   echo "BEGIN TRANSACTION;" > "$FILE.sql"

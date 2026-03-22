@@ -1,13 +1,13 @@
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.65])
-AC_INIT([librds], [0.9], [tobias.lorenz@gmx.net])
+AC_PREREQ([2.72])
+AC_INIT([librds],[0.9],[tobias.lorenz@gmx.net])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_LIBOBJ_DIR([lib])
-AM_INIT_AUTOMAKE([-Wall -Werror dist-bzip2])
+AM_INIT_AUTOMAKE([-Wall dist-bzip2])
 # active this to get nicer tests
 #AM_INIT_AUTOMAKE([-Wall -Werror dist-bzip2 color-tests parallel-tests])
 
@@ -62,7 +62,15 @@ LT_INIT
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
 
 # Checks for header files.
-AC_HEADER_STDC
+m4_warn([obsolete],
+[The preprocessor macro 'STDC_HEADERS' is obsolete.
+  Except in unusual embedded environments, you can safely include all
+  C89 headers unconditionally.])dnl
+# Autoupdate added the next two lines to ensure that your configure
+# script's behavior did not change.  They are probably safe to remove.
+AC_CHECK_INCLUDES_DEFAULT
+AC_PROG_EGREP
+
 AC_CHECK_HEADERS([fcntl.h stdint.h stdlib.h string.h wchar.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
