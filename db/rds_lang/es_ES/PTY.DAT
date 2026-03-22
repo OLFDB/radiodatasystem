@@ -1,0 +1,33 @@
+PTY;RDS;RDS8;RDS16;RBDS;RBDS8;RBDS16
+0;No se indica el tipo programa;Ninguno;Ninguno;No program type or undefined;None;None
+1;Noticias;Noticias;Noticias;News;News;News
+2;Magazin;Magazine;Magazine;Information;Inform;Information
+3;Información;Info;Información;Sports;Sports;Sports
+4;Deportes;Deportes;Deportes;Talk;Talk;Talk
+5;Educación;Educa;Educación;Rock;Rock;Rock
+6;Drama;Drama;Drama;Classic Rock;Cls Rock;Classic Rock
+7;Cultura;Cultura;Cultura;Adult Hits;Adlt Hit;Adult Hits
+8;Ciencia;Ciencia;Ciencia;Soft Rock;Soft Rck;Soft Rock
+9;Varios;Varios;Varios;Top 40;Top 40;Top 40
+10;Música Pop;M Pop;Música Pop;Country;Country;Country
+11;Música Rock;M Rock;Música Rock;Oldies;Oldies;Oldies
+12;Grand éxitos;G éxitos;Grandes éxitos;Soft;Soft;Soft
+13;Música Ligera;M Ligera;Música Ligera;Nostalgia;Nostalga;Nostalgia
+14;Música Clásica;Clásica;Música Clásica;Jazz;Jazz;Jazz
+15;Otra Música;M Varia;Música Varia;Classical;Classicl;Classical
+16;Información Metereológica;Meteo;Meteorología;Rhythm and Blues;R & B;Rhythm and Blues
+17;Economia;Economia;Economia;Soft Rhythm and Blues;Soft R&B;Soft R & B
+18;Infancia;Infancia;Infancia;Foreign Language;Language;Foreign Language
+19;Sociedad;Sociedad;Sociedad;Religious Music;Rel Musc;Religious Music
+20;Religión;Religión;Religión;Religious Talk;Rel Talk;Religious Talk
+21;Opinión;Opinión;Opinión-Oyentes;Personality;Persnlty;Personality
+22;Viajes;Viajes;Viajes;Public;Public;Public
+23;Ocio;Ocio;Ocio;College;College;College
+24;Música Jazz;M Jazz;Música Jazz;Unassigned;;
+25;Música Country;Country;Música Country;Unassigned;;
+26;Música Nacional;Nacional;Música Nacional;Unassigned;;
+27;Música de ayer;M Ayer;Música de Ayer;Unassigned;;
+28;Música Folk;M Folk;Música Folk;Unassigned;;
+29;Documental;Docu;Documental;Weather;Weather;Weather
+30;Test de Alarma;Prueba;Prueba de Alarma;Emergency Test;Test;Emergency Test
+31;Alarma;Alarma;¡ Alarma !;Emergency;ALERT !;ALERT! ALERT!

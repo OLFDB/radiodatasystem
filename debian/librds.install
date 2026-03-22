@@ -1,0 +1,2 @@
+lib/.libs/librds.so*		/usr/lib
+db/rds_program/rds_program.db	/var/lib/rds

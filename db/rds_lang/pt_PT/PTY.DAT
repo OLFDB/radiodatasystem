@@ -1,0 +1,33 @@
+PTY;RDS;RDS8;RDS16;RBDS;RBDS8;RBDS16
+0;Não definido;Não def;Não definido;No program type or undefined;None;None
+1;Notícias;Notícias;Notícias;News;News;News
+2;Actualidade;Actual;Actualidade;Information;Inform;Information
+3;Informação;Info;Informação;Sports;Sports;Sports
+4;Desporto;Desporto;Desporto;Talk;Talk;Talk
+5;Educação;Educação;Educação;Rock;Rock;Rock
+6;Teatro Radiofónico;Teatro;Rádio -Teatro;Classic Rock;Cls Rock;Classic Rock
+7;Cultura;Cultura;Cultura;Adult Hits;Adlt Hit;Adult Hits
+8;Ciência;Ciência;Ciência;Soft Rock;Soft Rck;Soft Rock
+9;Variado;Variado;Variado;Top 40;Top 40;Top 40
+10;Música Pop;Pop;Música Pop;Country;Country;Country
+11;Música Rock;Rock;Música Rock;Oldies;Oldies;Oldies
+12;Música Ligeira;MLigeira;Música Ligeira;Soft;Soft;Soft
+13;Clássica Ligeira;ClassLig;Clássica Ligeira;Nostalgia;Nostalga;Nostalgia
+14;Música Clássica;Classica;Música Clássica;Jazz;Jazz;Jazz
+15;Outras Músicas;Outras M;Outras Músicas;Classical;Classicl;Classical
+16;Meteorologia;Meteo;Meteorologia;Rhythm and Blues;R & B;Rhythm and Blues
+17;Economia;Economia;Economia;Soft Rhythm and Blues;Soft R&B;Soft R & B
+18;Programa Infantil;Infantil;Progr. Infantil;Foreign Language;Language;Foreign Language
+19;Acontec Sociais;A.Social;Acontec. Social;Religious Music;Rel Musc;Religious Music
+20;Religião;Religião;Religião;Religious Talk;Rel Talk;Religious Talk
+21;Telefonemas dos ouvintes;Phone In;Phone In;Personality;Persnlty;Personality
+22;Viagens;Viagens;Viagens;Public;Public;Public
+23;Lazer;Lazer;Lazer;College;College;College
+24;Música de Jazz;Jazz;Música de Jazz;Unassigned;;
+25;Música Country;Country;Música Country;Unassigned;;
+26;Música Nacional;Nacional;Música Nacional;Unassigned;;
+27;Música Antiga;M.Antiga;Música Antiga;Unassigned;;
+28;M.Antiga;Folclore;Música Folk;Unassigned;;
+29;Documentário;Document;Documentário;Weather;Weather;Weather
+30;Teste de Alarme;TESTE;Teste de Alarme;Emergency Test;Test;Emergency Test
+31;Alarme;Alarme !;Alarme-Alarme !;Emergency;ALERT !;ALERT! ALERT!

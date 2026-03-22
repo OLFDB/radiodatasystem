@@ -1,0 +1,33 @@
+PTY;RDS;RDS8;RDS16;RBDS;RBDS8;RBDS16
+0;Keine Programmartkennung;Kein PTY;Kein PTY;No program type or undefined;None;None
+1;Nachrichtendienst;Nachrich;Nachrichten;News;News;News
+2;Politik und Zeitgeschehen;Aktuell;Aktuelle Info;Information;Inform;Information
+3;Service Programm;Service;Service Programm;Sports;Sports;Sports
+4;Sport;Sport;Sport;Talk;Talk;Talk
+5;Lernen und Weiterbilden;Bildung;Bildung;Rock;Rock;Rock
+6;Hörspiel und Literatur;Hör+Lit;Hörspiel + Lit;Classic Rock;Cls Rock;Classic Rock
+7;Kultur, Kirche und Gesellschaft;Kultur;Kultur+Gesellsch;Adult Hits;Adlt Hit;Adult Hits
+8;Wissenschaft;Wissen;Wissenschaft;Soft Rock;Soft Rck;Soft Rock
+9;Unterhaltendes Wort;Unterh;Unterhaltung;Top 40;Top 40;Top 40
+10;Popmusik;Pop;Pop Musik;Country;Country;Country
+11;Rockmusik;Rock;Rock Musik;Oldies;Oldies;Oldies
+12;Unterhaltungsmusik;U-Musik;Unterhalt Musik;Soft;Soft;Soft
+13;Leichte klassische Musik;L-Musik;Leichte Klassik;Nostalgia;Nostalga;Nostalgia
+14;Ernste klassische Musik;E-Musik;Ernste Klassik;Jazz;Jazz;Jazz
+15;Spezielle Musikprogramme;--Musik;Spezielle Musik;Classical;Classicl;Classical
+16;Wetter;Wetter;Wetter;Rhythm and Blues;R & B;Rhythm and Blues
+17;Wirtschaft;Wirtsch;Wirtschaft;Soft Rhythm and Blues;Soft R&B;Soft R & B
+18;Kinderprogramm;Kinder;Kinderprogramm;Foreign Language;Language;Foreign Language
+19;Soziales;Soziales;Soziales;Religious Music;Rel Musc;Religious Music
+20;Religion;Religion;Religion;Religious Talk;Rel Talk;Religious Talk
+21;Anrufsendung;Anruf;Anrufsendung;Personality;Persnlty;Personality
+22;Reiseinformation;Reise;Reiseinformation;Public;Public;Public
+23;Freizeit;Freizeit;Freizeit;College;College;College
+24;Jazz;Jazz;Jazz;Unassigned;;
+25;Countrymusik;Country;Country Musik;Unassigned;;
+26;Musik des Landes;Landes M;Landesmusik;Unassigned;;
+27;Oldiemusik;Oldies;Oldies Musik;Unassigned;;
+28;Folklore;Folklore;Folklore;Unassigned;;
+29;Feature;Feature;Feature;Weather;Weather;Weather
+30;Alarmtest;Test;Alarm Test;Emergency Test;Test;Emergency Test
+31;Alarm;Alarm!;Alarm! Alarm!;Emergency;ALERT !;ALERT! ALERT!

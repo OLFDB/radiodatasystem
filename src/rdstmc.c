@@ -1,0 +1,780 @@
+/*
+ * Copyright © 2009-2011 Tobias Lorenz
+ *
+ * This file is part of librds.
+ *
+ * librds is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * librds is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with librds.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * \file rdstmc.c
+ * \brief Dumps received RDS TMC data.
+ * \author Tobias Lorenz <tobias.lorenz@gmx.net>
+ *
+ * This program dumps all received TMC data from a RDS stream.
+ */
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
+#include "rds.h"
+#include "filters.h"
+#include "print.h"
+
+
+static sqlite3 *rds_oda_tmc_db_el;
+
+
+static void print_time(time_t _t)
+{
+	static char buf[40];
+	struct tm *tm;
+
+	tm = localtime(&_t);
+	if (strftime(buf, sizeof(buf), "%F %T %Z", tm) != 0)
+		printf("%s\n", buf);
+}
+
+
+
+/* nature=info (I) duration=dynamic (D) */
+/* The situation is expected to continue ... */
+static const char duration_str_i_d[8][40] = {	/* dynamic events with an 'information' nature */
+	"(no explicit duration to be given)",	/* do not decrement */
+	"for at least the next 15 minutes",	/* do not decrement */
+	"for at least the next 30 minutes",	/* decrement after 15 minutes */
+	"for at least the next 1 hour",		/* decrement after 30 minutes */
+	"for at least the next 2 hours",	/* decrement after 1 hour */
+	"for at least the next 3 hours",	/* decrement after 1 hour */
+	"for at least the next 4 hours",	/* decrement after 1 hour */
+	"for the rest of the day"};		/* do not decrement */
+
+/* nature=forecast (F) duration=dynamic (D) */
+/* The situation is expected ... */
+static const char duration_str_f_d[8][40] = {	/* dynamic events with an 'forecast' nature */
+	"(no explicit start-time to be given)",	/* do not decrement */
+	"within the next 15 minutes",		/* do not decrement */
+	"within the next 30 minutes",		/* decrement after 15 minutes */
+	"within the next 1 hour",		/* decrement after 30 minutes */
+	"within the next 2 hours",		/* decrement after 1 hour */
+	"within the next 3 hours",		/* decrement after 1 hour */
+	"within the next 4 hours",		/* decrement after 1 hour */
+	"later today"};				/* do not decrement */
+
+/* nature=info (I) duration=longer-lasting (L) */
+/* The situation is expected to continue... */
+static const char duration_str_i_l[8][40] = {	/* long period 'information' events */
+	"(no explicit duration to be given)",	/* do not decrement */
+	"for the next few hours",		/* do not decrement */
+	"for the rest of the day",		/* do not decrement */
+	"until tomorrow evening",		/* decrement at midnight */
+	"for the rest of the week",		/* decrement Friday midnight */
+	"until the end of next week",		/* decrement Sunday midnight */
+	"until the end of the month",		/* do not decrement */
+	"for a long period"};			/* do not decrement */
+
+/* nature=forecast (F) duration=long-lasting (L) */
+/* The situation is expected ... */
+static const char duration_str_f_l[8][40] = {	/* long period 'forecast' events */
+	"(no explicit time horizon given)",	/* do not decrement */
+	"within the next few hours",		/* do not decrement */
+	"later today",				/* do not decrement */
+	"tomorrow",				/* decrement at midnight */
+	"the day after tomorrow",		/* decrement at midnight */
+	"this weekend",				/* do not decrement */
+	"later this week",			/* do not decrement */
+	"next week"};				/* do not decrement */
+
+static const char diversion_advice[2][60] = {	/* diversion advice */
+	"(no diversion recommended)",
+	"end-users are recommended to avoid the area if possible"};
+
+/* duration=dynamic (D) */
+static const char persistance_str_d[8][60] = {
+	"15 minutes (no message to end-user)",
+	"15 minutes (with message to end-user)",
+	"30 minutes",
+	"1 hour",
+	"2 hours",
+	"3 hours",
+	"4 hours",
+	"until midnight on the day of message receipt"};
+
+/* nature=info (I) or silent (S) */
+static const char persistance_str_i[8][60] = {
+	"1 hour",
+	"2 hours",
+	"until midnight on the day of message receipt",
+	"until midnight on the day after message receipt",
+	"until midnight on the day after message receipt",
+	"until midnight on the day after message receipt",
+	"until midnight on the day after message receipt",
+	"until midnight on the day after message receipt"};
+
+/* nature=forecast (F) */
+static const char persistance_str_f[8][60] = {
+	"1 hour",
+	"2 hours",
+	"until midnight on the day of message receipt",
+	"until midnight on the day after message receipt",
+	"until midnight on the day after message receipt",
+	"until midnight on the day after message receipt",
+	"until midnight on the day after message receipt",
+	"until midnight on the day after message receipt"};
+
+
+/**
+ * \brief Decoding of ident information
+ *
+ * This function returns the duration string.
+ *
+ * \param n	nature (from event list)
+ * \param d	duration (from event list)
+ * \param dp	duration and persistance from TMC message
+ */
+static char *tmc_get_duration_str(uint8_t n, uint8_t d, uint8_t dp)
+{
+	static char s[256];
+	n = toupper(n);
+	d = toupper(d);
+
+	memset(&s, 0, sizeof(s));
+
+	if ((n == 'I') && (d == 'D')) {
+		snprintf(&s[0], sizeof(s), "The situation is expected to continue %s", duration_str_i_d[dp]);
+	} else if ((n == 'F') && (d == 'D')) {
+		snprintf(&s[0], sizeof(s), "The situation is expected %s", duration_str_f_d[dp]);
+	} else if ((n == 'I') && (d == 'L')) {
+		snprintf(&s[0], sizeof(s), "The situation is expected to continue %s", duration_str_i_l[dp]);
+	} else if ((n == 'F') && (d == 'L')) {
+		snprintf(&s[0], sizeof(s), "The situation is expected %s", duration_str_f_l[dp]);
+	}
+
+	return &s[0];
+}
+
+
+static void tmc_print_location(uint16_t lcd, rds_oda_tmc_lcl_location_t *l, uint8_t dir, uint8_t dir_ub)
+{
+	char t[256] = "";
+
+	/* loc = 0: reserved */
+	if (lcd == 0) {
+		printf("reserved");
+		return;
+	}
+
+	/* loc = 65533: '(message) for all users' */
+	if (lcd == 65533) {
+		printf("(message) for all users");
+		return;
+	}
+
+	/* loc = 65534: 'silent' location code */
+	if (lcd == 65534) {
+		printf("'silent' location code)");
+		return;
+	}
+
+	/* loc = 65535: updating or cancelling of messages */
+	if (lcd == 65535) {
+		printf("updating or cancelling of messages");
+		return;
+	}
+
+	/* loc = 63488..64511: special use */
+	if ((lcd >= 63488) && (lcd <= 64511)) {
+		printf("special use");
+		return;
+	}
+
+	/* loc = 64512 (0xFC00)..65532: INTER-ROAD (foreign location table) */
+	if ((lcd >= 64512) && (lcd <= 65532)) {
+		printf("INTER-ROAD<ci=%i,ldn=%i> l1=<%i>", (lcd >> 6) & 0xf, lcd & 0x3f, lcd);
+		// set ci to ...		4		A		F		1/D
+		// set ldn to ...		9..16		1..8		17..32		1..8
+		// land is then			Schweiz		Österreich	Frankreich	Deutschland
+	}
+
+	/* loc = 1..63487: regular locations */
+
+	/* (sub)type */
+	if (l->stcd > 0) { // print only subtypes
+		rds_oda_tmc_lcl_get_type_name(&t[0], sizeof(t), l->tclass, l->tcd, l->stcd);
+		printf("%s ", &t[0]);
+	}
+
+	/* names */
+	if (l->roadnumber[0] != '\0')
+		printf("%s ", &l->roadnumber[0]);
+	if (l->junctionnumber[0] != '\0')
+		printf("%s ", &l->junctionnumber[0]);
+	if (l->rnid) {
+		rds_oda_tmc_lcl_get_name(&t[0], sizeof(t), l->rnid);
+		printf("%s ", &t[0]);
+	}
+	if (l->nid) {
+		rds_oda_tmc_lcl_get_name(&t[0], sizeof(t), l->nid);
+		printf("%s ", &t[0]);
+	}
+
+	if (l->n1id && (dir == 1)) {
+		rds_oda_tmc_lcl_get_name(&t[0], sizeof(t), l->n1id);
+		printf("%s", &t[0]);
+		if (dir_ub == 2)
+			return;
+		if (l->n2id)
+			printf(" heading to ");
+	}
+	if (l->n2id) {
+		rds_oda_tmc_lcl_get_name(&t[0], sizeof(t), l->n2id);
+		printf("%s", &t[0]);
+		if (dir_ub == 2)
+			return;
+	}
+	if (l->n1id && (dir == 0)) {
+		if (l->n2id)
+			printf(" heading to ");
+		rds_oda_tmc_lcl_get_name(&t[0], sizeof(t), l->n1id);
+		printf("%s", &t[0]);
+	}
+}
+
+
+static void tmc_print_start_stop_time(uint8_t t)
+{
+	if (t <= 95) {
+		printf("today at %2.2d:%2.2d UTC", (t*15)/60, (t*15)%60);
+	} else if (t <= 200) {
+		printf("in %d days at %2.2d:00 UTC", (t-96)/24, (t-96)%24);
+	} else if (t <= 231) {
+		printf("in %d days", (t-200));
+	} else {
+		printf("%s %d.month", (t-231)%2 ? "mid of" : "end of", (t-230)/2);
+	}
+}
+
+
+static char *tmc_get_quantifier(uint8_t q, uint8_t n)
+{
+	char sql[] = "select L4_Q_ from QC where CODE=__";
+	sqlite3_stmt *stmt;
+	static char s[256];
+	int rc;
+
+	memset(&s, 0, sizeof(s));
+
+	if (q <= 5) {
+		/* get q=0..5 from database EL, table QC, columns L4_Q0..L4_Q5 */
+		(void) snprintf(sql, sizeof(sql), "select L4_Q%hu from QC where CODE=%hu", q, n);
+		(void) sqlite3_prepare(rds_oda_tmc_db_el, sql, (int) sizeof(sql), &stmt, NULL);
+		rc = sqlite3_step(stmt);
+		if (rc == SQLITE_ROW) {
+			(void) strncpy(&s[0], sqlite3_column_text(stmt, 0), sizeof(s));
+		} else {
+		}
+		(void) sqlite3_finalize(stmt);
+	} else
+
+	switch (q) {
+#if 0
+	case 0: /* n (small number) */
+		if ((n >= 1) && (n <= 28))
+			(void) snprintf(&s[0], sizeof(s), "%u", (unsigned int) n);
+		else if ((n >= 29) && (n <= 32))
+			(void) snprintf(&s[0], sizeof(s), "%u", (unsigned int) (30+(n-29)*2));
+		break;
+	case 1: /* N (number) */
+		if ((n >= 1) && (n <= 4))
+			(void) snprintf(&s[0], sizeof(s), "%u", (unsigned int) n);
+		else if ((n >= 5) && (n <= 14))
+			(void) snprintf(&s[0], sizeof(s), "%u", (unsigned int) (10+(n-5)*10));
+		else if ((n >= 15) && (n <= 32))
+			(void) snprintf(&s[0], sizeof(s), "%u", (unsigned int) (150+(n-15)*50));
+		break;
+	case 2: /* less than V metres */
+		if ((n >= 1) && (n <= 30))
+			(void) snprintf(&s[0], sizeof(s), "less than %u metres", (unsigned int) (n*10));
+		break;
+	case 3: /* P percent */
+		if ((n >= 1) && (n <= 21))
+			(void) snprintf(&s[0], sizeof(s), "less than %u metres", (unsigned int) ((n-1)*5));
+		break;
+	case 4: /* of up to S km/h */
+		if ((n >= 1) && (n <= 32))
+			(void) snprintf(&s[0], sizeof(s), "of up to %u km/h", (unsigned int) (n*5));
+		break;
+	case 5: /* of up to M minutes/hours */
+		if ((n >= 1) && (n <= 10))
+			(void) snprintf(&s[0], sizeof(s), "of up to %u minutes", (unsigned int) (n*5));
+		else if ((n >= 11) && (n <= 22))
+			(void) snprintf(&s[0], sizeof(s), "of up to %u hours", (unsigned int) (n-10));
+		else if ((n >= 23) && (n <= 32))
+			(void) snprintf(&s[0], sizeof(s), "of up to %u hours", (unsigned int) (18+(n-23)*6));
+		break;
+#endif
+	case 6: /* T degress Celsius */
+		if ((n >= 1) && (n <= 101))
+			(void) snprintf(&s[0], sizeof(s), "%u degrees Celsius", (unsigned int) ((n-1)-50));
+		break;
+	case 7: /* H time */
+		if ((n >= 1) && (n <= 144))
+			(void) snprintf(&s[0], sizeof(s), "%2.2u:%2.2u", (unsigned int) ((n-1)/6), (unsigned int) (((n-1)%6)*10));
+		break;
+	case 8: /* W tonnes */
+		if ((n >= 1) && (n <= 101))
+			(void) snprintf(&s[0], sizeof(s), "%.1f tonnes", (double) (n*0.1));
+		else if ((n >= 102) && (n <= 201))
+			(void) snprintf(&s[0], sizeof(s), "%.1f tonnes", (double) (10.5+(n-102.0)*0.5));
+		break;
+	case 9: /* L metres */
+		if ((n >= 1) && (n <= 101))
+			(void) snprintf(&s[0], sizeof(s), "%.1f metres", (double) ((n-1.0)*0.1));
+		else if ((n >= 102) && (n <= 241))
+			(void) snprintf(&s[0], sizeof(s), "%.1f metres", (double) (10.5+(n-102.0)*0.5));
+		break;
+	case 10: /* of up to D millimetres */
+		if ((n >= 1) && (n <= 255))
+			(void) snprintf(&s[0], sizeof(s), "of up to %u millimetres", (unsigned int) n);
+		break;
+	case 11: /* M MHz */
+		if ((n >= 1) && (n <= 204))
+			(void) snprintf(&s[0], sizeof(s), "%u kHz", (unsigned int) (87600+(n-1)*100));
+		break;
+	case 12: /* k kHz */
+		if (rds_program_current->itu == 2) {
+			if ((n >= 16) && (n <= 124))
+				(void) snprintf(&s[0], sizeof(s), "%u kHz", (unsigned int) (530+(n-16)*10));
+		} else { /* ITU regions 1, 3 and 0 (unknown) */
+			if ((n >= 1) && (n <= 15)) {
+				(void) snprintf(&s[0], sizeof(s), "%u kHz", (unsigned int) (153+(n-1)*9));
+			} else if ((n >= 16) && (n <= 135)) {
+				(void) snprintf(&s[0], sizeof(s), "%u kHz", (unsigned int) (531+(n-16)*9));
+			}
+		}
+		break;
+	}
+
+	return &s[0];
+}
+
+
+/**
+ * \brief Prints a TMC message
+ */
+static void tmc_print_message(rds_oda_tmc_message_t *msg)
+{
+	int i;
+	char *s;
+	char t[256] = "";
+	rds_oda_tmc_lcl_location_t l1, l2, l3, l4;
+	unsigned int diversion_nr;
+
+	printf("========================================\n");
+
+	/* message receive time */
+	printf("Message received at ");
+	print_time(msg->receive_time);
+
+	/* urgency */
+	switch (msg->urg) {
+	case 'N':
+//		printf("<Normal urgency>\n");
+		break;
+	case 'U':
+		printf("<Urgent>\n");
+		break;
+	case 'X':
+		printf("<Extremly Urgent>\n");
+		break;
+	default:
+		printf("<unknown %c>\n", msg->urg);
+	}
+
+	/* nature */
+	switch (toupper(msg->nat)) {
+	case 'I':
+//		printf("<Info>\n");
+		break;
+	case 'F':
+		printf("<Forecast>\n");
+		break;
+	case 'S':
+		printf("<Silent>\n");
+		break;
+	default:
+		printf("<unknown %c>\n", msg->nat);
+	}
+
+	/* loc = 0: reserved */
+	/* loc = 1..63487: regular locations */
+	/* loc = 63488..64511: special use */
+	/* loc = 64512 (0xFC00)..65532: INTER-ROAD (foreign location table) */
+	/* loc = 65533: '(message) for all users' */
+	/* loc = 65534: 'silent' location code */
+	/* loc = 65535: updating or cancelling of messages */
+
+	/* get location 1 */
+	if ((msg->loc >= 64512) && (msg->loc <= 65532)) {
+		// switch location table in use
+		// if unable to load, then don't show the message
+		rds_oda_tmc_lcl_get_location(msg->loc_ir, &l1);
+	} else {
+		rds_oda_tmc_lcl_get_location(msg->loc, &l1);
+	}
+
+	/* get location 2 */
+	if (msg->ext) {
+		memcpy(&l2, &l1, sizeof(rds_oda_tmc_lcl_location_t));
+		i = msg->ext;
+		while (i-- != 0)
+			rds_oda_tmc_lcl_get_location((msg->dir == 0) ? l2.pos_off_lcd : l2.neg_off_lcd, &l2);
+	}
+
+	/* get administrative area reference */
+//	if (l1.pol_lcd) {
+//		printf("pol_lcd:");
+//		rds_oda_tmc_lcl_get_location(l1.pol_lcd, &l3);
+//		tmc_print_location(msg->loc, &l3, msg->dir, 0);
+//		printf("\n");
+//	}
+
+	/* get other area reference */
+//	if (l1.oth_lcd) {
+//		printf("oth_lcd:");
+//		rds_oda_tmc_lcl_get_location(l1.oth_lcd, &l3);
+//		tmc_print_location(msg->loc, &l3, msg->dir, 0);
+//		printf("\n");
+//	}
+
+	/* get segment reference */
+	if (l1.seg_lcd) {
+//		printf("seg_lcd:");
+		rds_oda_tmc_lcl_get_location(l1.seg_lcd, &l3);
+		tmc_print_location(msg->loc, &l3, msg->dir, 0);
+		printf("\n");
+	}
+
+	/* get road reference */
+	if (l1.roa_lcd) {
+//		printf("roa_lcd:");
+		rds_oda_tmc_lcl_get_location(l1.roa_lcd, &l3);
+		tmc_print_location(msg->loc, &l3, msg->dir, 0);
+		printf("\n");
+	}
+
+	/* print location */
+	if (msg->ext) {
+		printf("between ");
+		tmc_print_location(msg->loc, &l2, msg->dir, msg->dir_ub);
+		printf(" and ");
+	}
+
+	/* print location */
+	tmc_print_location(msg->loc, &l1, msg->dir, msg->dir_ub);
+	printf("\n");
+
+	/* directionality */
+	if (msg->dir_ub == 2) {
+		printf("both directions");
+		printf("\n");
+	}
+
+	/* check for explicit stop time */
+	/** \todo remove this, if this is correctly implemented in tmc.c */
+	int start_time = -1;
+	int stop_time = -1;
+	int evt_cnt = 1;
+	int evt_qnt[3] = {0,0,0};
+	for (i = 0; i < msg->opt_cnt; i++) {
+		unsigned short data = msg->opt[i].data;
+		unsigned short dur = msg->dur;
+		switch(msg->opt[i].label) {
+		case 4: /* Additional quantifiers */
+		case 5: /* Additional quantifiers */
+			evt_qnt[evt_cnt-1]++;
+			break;
+		case 7: /* Explicit start time */
+			start_time = data;
+			break;
+		case 8: /* Explicit stop time */
+			stop_time = data;
+			break;
+		case 9: /* Additional event */
+			evt_cnt++;
+			break;
+		}
+	}
+
+	/* Quantifier */
+	//printf("qnt=<%i>", msg->qnt);
+	//printf("\n");
+
+	/* text */
+	rds_oda_tmc_get_phrase(&t[0], sizeof(t), 0, msg->evt, evt_qnt[0]);
+	printf("%s\n", &t[0]);
+
+	/* duration */
+	if ((msg->dur > 0) && (msg->stop_time==-1)) {
+		/* only show this, if we have no explicit stop_time */
+		//printf("dur=<%c,%c,%i>", msg->nat, msg->dur_dl, msg->dur);
+		printf("%s", tmc_get_duration_str(msg->nat, msg->dur_dl, msg->dur));
+		printf("\n");
+	}
+
+	/* optional message content */
+	diversion_nr = 0;
+	evt_cnt = 1;
+	for (i = 0; i < msg->opt_cnt; i++) {
+		unsigned short data = msg->opt[i].data;
+		unsigned short dur = msg->dur;
+		//printf("ff(%i)=<%i:%i>: ", i, msg->opt[i].label, data);
+		switch(msg->opt[i].label) {
+		case 0: /* Duration */
+			// already covered
+			break;
+		case 1: /* Control code */
+			// already covered
+			break;
+		case 2:	/* Length of route affected */
+			if (data == 0)
+				printf("$L='Problem extends for more than 100 km'");
+			else if ((data >= 1) && (data <= 10))
+				printf("$L='Length of problem is %d km'", data);
+			else if ((data >= 11) && (data <= 15))
+				printf("$L='Length of problem is %d km'", 12+(data-11)*2);
+			else if ((data >= 16) && (data <= 31))
+				printf("$L='Length of problem is %d km'", 25+(data-16)*5);
+			printf("\n");
+			break;
+		case 3: /* Speed limit */
+			if ((data >= 1) && (data <= 26))
+				printf("Maximum speed is %d km/h\n", data*5);
+			break;
+		case 4: /* Additional quantifiers */
+		case 5: /* Additional quantifiers */
+			/** \todo apply to all preceding additional events */
+			printf("$Q='%s'\n", tmc_get_quantifier(msg->qnt, data));
+			break;
+		case 6: /* Supplementary information */
+			rds_oda_tmc_get_phrase(&t[0], sizeof(t), 'Z', data, 0);
+			printf("%s\n", &t[0]);
+			break;
+		case 7: /* Explicit start time */
+			printf("from ");
+			//tmc_print_start_stop_time(start_time);
+			//printf(" -> ");
+			print_time(msg->start_time);
+			break;
+		case 8: /* Explicit stop time */
+			printf("until ");
+			//tmc_print_start_stop_time(stop_time);
+			//printf(" -> ");
+			print_time(msg->stop_time);
+			break;
+		case 9: /* Additional event */
+			evt_cnt++;
+			rds_oda_tmc_get_phrase(&t[0], sizeof(t), 0, data, evt_qnt[evt_cnt-1]);
+			printf("%s\n", &t[0]);
+			break;
+		case 10: /* Detailed diversion instructions */
+			diversion_nr++;
+			if (diversion_nr == 1) {
+				printf("Diversion recommended via ");
+				rds_oda_tmc_lcl_get_location(data, &l4);
+				tmc_print_location(msg->loc, &l4, msg->dir, 0);
+			} else {
+				printf(" and then via ");
+				rds_oda_tmc_lcl_get_location(data, &l4);
+				tmc_print_location(msg->loc, &l4, msg->dir, 0);
+			}
+			printf("\n");
+			break;
+		case 11: /* Destination */
+			if ((i > 0) && (msg->opt[i-1].label != 11))
+				printf("for traffic heading towards ");
+			else
+				printf(" and ");
+			rds_oda_tmc_lcl_get_location(data, &l4);
+			tmc_print_location(msg->loc, &l4, msg->dir, 0);
+			printf("\n");
+			break;
+		case 13: /* Cross linkage to source of problem, on another route */
+			printf("cross_linkage=");
+			rds_oda_tmc_lcl_get_location(data, &l4);
+			tmc_print_location(msg->loc, &l4, msg->dir, 0);
+			printf("\n");
+			break;
+		case 14: /* Separator */
+			printf(",\n");
+			diversion_nr = 0;
+			break;
+		default: /* 12,15 */
+			/* Reserved for future use */
+			break;
+		}
+	}
+
+	/* diversion advice */
+	if (msg->div) {
+		printf("%s", diversion_advice[msg->div]);
+		printf("\n");
+	}
+}
+
+
+static void tmc_print(rds_oda_tmc_message_t *_msg, uint8_t _action)
+{
+	switch(_action) {
+	case 0: /* new message */
+		tmc_print_message(_msg);
+		break;
+	case 1: /* message updated (by timer or by reception) */
+		tmc_print_message(_msg);
+		break;
+	default: /* problem cleared (by cancellation message) */
+		tmc_print_message(_msg);
+		printf("<message cleared>\n");
+		break;
+	}
+}
+
+static void callback(rds_program_t *new, rds_program_t *old)
+{
+	uint8_t separator = 0;
+	if (rds_program_current != new)
+		return;
+
+	if (new->pi != old->pi) {
+		if (separator == 0) {
+			printf("========================================\n");
+			separator = 1;
+		}
+		pi_print();
+	}
+	if (new->ecc != old->ecc) {
+		if (separator == 0) {
+			printf("========================================\n");
+			separator = 1;
+		}
+		ecc_print();
+	}
+	if (memcmp(&new->ct, &old->ct, sizeof(new->ct)) != 0) {
+		if (separator == 0) {
+			printf("========================================\n");
+			separator = 1;
+		}
+		ct_print();
+	}
+}
+
+
+int main(int argc, char *argv[])
+{
+	FILE *fd;
+	int opt;
+	int filter = 0;
+	int usage  = 0;
+	int retval = 0;
+
+	while ((opt = getopt(argc, argv, "f:")) != -1) {
+		switch (opt) {
+		case 'f':
+			if (strcmp(optarg, "v4l") == 0) {
+				filter = 0;
+			} else
+			if (strcmp(optarg, "raw") == 0) {
+				filter = 1;
+			} else
+			if (strcmp(optarg, "csv") == 0) {
+				filter = 2;
+			} else
+			if (strcmp(optarg, "smp") == 0) {
+				filter = 3;
+			} else
+				filter = -1;
+			break;
+		default: /* '?' */
+			usage = 1;
+		}
+	}
+
+	/* safety checks */
+	if ((filter == -1) || ((argc - optind) != 1))
+		usage = 1;
+	if (usage == 1) {
+		printf("Usage: %s [-f filter] filename\n", argv[0]);
+		return EXIT_FAILURE;
+	}
+
+	/* open file */
+	if (strcmp(argv[optind], "-") == 0) {
+		fd = stdin;
+	} else {
+		fd = fopen(argv[optind], "r");
+		if (fd <= 0) {
+			printf("Unable to open file %s\n", argv[optind]);
+			return EXIT_FAILURE;
+		}
+	}
+
+	/* open database */
+	if (sqlite3_open("/usr/share/rds/tmc_el_en_CEN.db", &rds_oda_tmc_db_el) != 0) {
+		perror("unable to open EL database");
+		(void) sqlite3_close(rds_oda_tmc_db_el);
+		return EXIT_SUCCESS;
+	}
+
+	/* set callbacks */
+	rds_callback = &callback;
+	rds_oda_tmc_callback = &tmc_print;
+
+	/* save RDS program on change */
+	rds_program_save_config = RDS_PROGRAM_SAVE_CONFIG_ON_CHANGE;
+
+	/* read in stream */
+	do {
+		switch (filter) {
+		case 0:
+			retval = rds_decode_v4l(fd);
+			break;
+		case 1:
+			retval = rds_decode_raw(fd);
+			break;
+		case 2:
+			retval = rds_decode_csv(fd);
+			break;
+		case 3:
+			retval = rds_decode_smp(fd);
+			break;
+		}
+	} while (retval == EXIT_SUCCESS);
+
+	/* close file */
+	(void) fclose(fd);
+
+	/* save all RDS programs */
+	rds_program_save_all();
+
+	/* close database */
+	sqlite3_close(rds_oda_tmc_db_el);
+
+	return EXIT_SUCCESS;
+}

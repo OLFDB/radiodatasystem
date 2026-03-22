@@ -1,0 +1,33 @@
+PTY;RDS;RDS8;RDS16;RBDS;RBDS8;RBDS16
+0;niet gedefinieerd;geen;niet bepaald;No program type or undefined;None;None
+1;Nieuws;Nieuws;Nieuws;News;News;News
+2;Actualiteit;Actueel;Actualiteit;Information;Inform;Information
+3;Informatie;Info;Informatie;Sports;Sports;Sports
+4;Sport;Sport;Sport;Talk;Talk;Talk
+5;Educatie;Educat.;Educatie;Rock;Rock;Rock
+6;Drama;Drama;Drama;Classic Rock;Cls Rock;Classic Rock
+7;Cultuur;Cultuur;Cultuur;Adult Hits;Adlt Hit;Adult Hits
+8;Wetenschap;Wetensch;Wetenschap;Soft Rock;Soft Rck;Soft Rock
+9;Varia en gesprekken;Varia;Varia;Top 40;Top 40;Top 40
+10;Pop;Pop;Popmuziek;Country;Country;Country
+11;Rock;Rock;Rockmuziek;Oldies;Oldies;Oldies
+12;Melodie: ontspanningsmuziek;Melodie;Melodie;Soft;Soft;Soft
+13;Licht klassiek;Licht Kl;Licht klassiek;Nostalgia;Nostalga;Nostalgia
+14;Klassiek;Klassiek;Klassieke muziek;Jazz;Jazz;Jazz
+15;Overige muziek;Muziek;Muziek;Classical;Classicl;Classical
+16;Weerbericht;Het weer;Het weer;Rhythm and Blues;R & B;Rhythm and Blues
+17;Economie;Economie;Economie;Soft Rhythm and Blues;Soft R&B;Soft R & B
+18;Voor kinderen;Kinderen;Voor kinderen;Foreign Language;Language;Foreign Language
+19;Maatschappelijk;Maatsch.;Maatschappelijk;Religious Music;Rel Musc;Religious Music
+20;Religie;Religie;Religie;Religious Talk;Rel Talk;Religious Talk
+21;Doe mee !;Doe mee;Doe mee !;Personality;Persnlty;Personality
+22;Reizen;Reizen;Reizen;Public;Public;Public
+23;Vrije tijd;Vrije T.;Vrije tijd;College;College;College
+24;Jazz;Jazz;Jazz;Unassigned;;
+25;Country;Country;Countrymuziek;Unassigned;;
+26;Nationale muziek;Eigen M;Nationale muziek;Unassigned;;
+27;Gouwe Ouwe;Goud;Gouwe ouwe;Unassigned;;
+28;Volksmuziek;Folk;Volksmuziek;Unassigned;;
+29;Documentaires;Document;Documentaires;Weather;Weather;Weather
+30;Alarmtest;Test;Alarmtest;Emergency Test;Test;Emergency Test
+31;Alarm;Alarm;Alarm ! Alarm !;Emergency;ALERT !;ALERT! ALERT!

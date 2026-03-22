@@ -1,0 +1,39 @@
+.TH "rdsrtcm" 1 "Thu May 26 2011" "rdsdump"
+
+.SH NAME
+rdsrtcm \- RASANT output as RTCM104 stream to feed into gpsd
+
+.SH SYNOPSIS
+.B rdsrtcm
+[
+.I -f filter
+]
+filename
+rtcmout
+
+.SH DESCRIPTION
+rdsrtcm reads data received via file stream
+and outputs the RASANT contents in RTCM compatible format.
+
+.SH INPUT FILTERS
+Currently there are three input filters available.
+The "v4l" filter acts on V4L file streams.
+The "raw" filter acts on raw 13-Byte RDS streams.
+The "csv" filter acts on comma separated value file streams.
+
+.SH FILES
+.I /dev/radio0
+.RS
+The RDS streams gets currently read from /dev/radio0 only.
+.RE
+.I /usr/share/rds/lang
+.RS
+This folder contains language specific databases with text representations of RDS values.
+.RE
+
+.SH AUTHORS
+Tobias Lorenz <tobias.lorenz@gmx.net>
+
+.SH SEE ALSO
+.BR rdsdump (1),
+.BR rdstmc (1)

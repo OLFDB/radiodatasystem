@@ -1,0 +1,5 @@
+librds (0.9) unstable; urgency=medium
+
+  * Initial packaging.
+
+ -- Tobias Lorenz <tobias.lorenz@gmx.net>  Wed, 11 Aug 2009 22:11:00 -0200

@@ -1,0 +1,31 @@
+Normative References
+--------------------
+DIN EN ISO 62106	RDS norm
+U.S. RBDS Standard	RBDS norm (including In-Receiver Database System I-RDS)
+DIN EN ISO 14819	Traffic and Travel Information (TTI) - TTI messages via traffic message coding
+DIN EN ISO 14819-1	  Part 1: Coding protocol for Radio Data System
+DIN EN ISO 14819-2	  Part 2: Event and information codes for Radio Data System
+DIN EN ISO 14819-3	  Part 3: Location referencing for ALERT-C
+DIN EN ISO 14819-6	  Part 6: Encryption and conditional access for the Radio Data System
+
+Additional References
+---------------------
+RDS-PI_in_D.pdf		About the coding of PI codes in Germany
+RDS ODA AIDs.pdf	List of assigned ODA AIDs
+RadioText Plus RT+
+  R06_044_1.pdf
+  R08_008_3_annex p.pdf
+TMC Handbook - Location Table Exchange Format
+RASANT (Radio Aided Satellite Navigation Technique)
+  derived from RTCM (Radio Technical Commission for Maritime Services) SC-104
+  Keywords: RTCM -AdV, SAPOS EPS, ETRS89
+  The decoding is based on the assumptions on the following homepage:
+  http://www.qsl.net/dk7in/RASANT.html
+
+Sources for TMC location code lists (from http://wiki.openstreetmap.org/wiki/TMC)
+---------------------------------------------------------------------------------
+Germany		http://www.bast.de/nn_42744/DE/Aufgaben/abteilung-f/referat-f4/Location-Code-List/location-code-list-start.html
+Italy		https://www.ilportaledellautomobilista.it/http://vps.ilportaledellautomobilista.it:8080/portal/dt?JSPTabContainer.setSelected=JSPTabContainer%2FUtilita&last=false&targetPage=database
+		http://www.radio.rai.it/cciss/databasetmc.cfm
+Norway		http://www.vegvesen.no/en/Professional/Technology/RDS+TMC
+Sweden		http://www20.vv.se/tmc/document/Sweden2007.zip

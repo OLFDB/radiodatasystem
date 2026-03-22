@@ -1,0 +1,4 @@
+lib/.libs/librds.a	/usr/lib
+lib/librds.la		/usr/lib
+lib/rds.h		/usr/include
+man/man3		/usr/share/man

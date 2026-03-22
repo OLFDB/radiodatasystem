@@ -1,0 +1,46 @@
+.TH "rdstmc" 1 "Thu May 26 2011" "rdsdump"
+
+.SH NAME
+rdstmc \- Text output of TMC information
+
+.SH SYNOPSIS
+.B rdstmc
+[
+.I -f filter
+]
+filename
+
+.SH DESCRIPTION
+rdstmc reads data received via file stream
+and outputs the TMC contents in an human-readable way.
+
+.SH INPUT FILTERS
+Currently there are three input filters available.
+The "v4l" filter acts on V4L file streams.
+The "raw" filter acts on raw 13-Byte RDS streams.
+The "csv" filter acts on comma separated value file streams.
+
+.SH FILES
+.I /dev/radio0
+.RS
+The RDS streams gets currently read from /dev/radio0 only.
+.RE
+.I /usr/share/rds/lang
+.RS
+This folder contains language specific databases with text representations of RDS values.
+.RE
+.I /usr/share/rds/tmc_el
+.RS
+This folder contains the event lists.
+.RE
+.I /usr/share/rds/tmc_lcl
+.RS
+This folder contains the location code lists.
+.RE
+
+.SH AUTHORS
+Tobias Lorenz <tobias.lorenz@gmx.net>
+
+.SH SEE ALSO
+.BR rdsdump (1),
+.BR rdsrtcm (1)

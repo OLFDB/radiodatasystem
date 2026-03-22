@@ -1,0 +1,33 @@
+PTY;RDS;RDS8;RDS16;RBDS;RBDS8;RBDS16
+0;Programtypen saknas eller är odefinierad;Pty sakn;Pty saknas;No program type or undefined;None;None
+1;Korta nyheter;Nyheter;Nyheter;News;News;News
+2;Korta nyheter;Aktuellt;Aktuellt;Information;Inform;Information
+3;Allmän information;Info;Info;Sports;Sports;Sports
+4;Sport;Sport;Sport;Talk;Talk;Talk
+5;Utbildningsprogram;Utbildn;Utbildning;Rock;Rock;Rock
+6;Teater och program om teater;Teater;Teater;Classic Rock;Cls Rock;Classic Rock
+7;Kultur i bred mening;Kultur;Kultur;Adult Hits;Adlt Hit;Adult Hits
+8;Vetenskapsprogram;Vetenskp;Vetenskap;Soft Rock;Soft Rck;Soft Rock
+9;nderhållningsprogram;Underh;Underhållning;Top 40;Top 40;Top 40
+10;Populärmusik;Pop;Popmusik;Country;Country;Country
+11;Rockmusik;Rock;Rockmusik;Oldies;Oldies;Oldies
+12;Underhållningsmusik;Lättlyss;Lättlyssnat;Soft;Soft;Soft
+13;Lätt klassisk musik(ej kompletta verk);L klass;Lätt klassiskt;Nostalgia;Nostalga;Nostalgia
+14;Kompletta klassiska verk;Klassisk;Klassisk musik;Jazz;Jazz;Jazz
+15;Övrig Musik;Övrig m;Övrig musik;Classical;Classicl;Classical
+16;Väderraporter;Väder;Väder;Rhythm and Blues;R & B;Rhythm and Blues
+17;Ekonomiprogram;Ekonomi;Ekonomi;Soft Rhythm and Blues;Soft R&B;Soft R & B
+18;Barnprogram;För barn;För barn;Foreign Language;Language;Foreign Language
+19;Program om sociala frågor;Socialt;Sociala frågor;Religious Music;Rel Musc;Religious Music
+20;Andliga frågor;Andligt;Andliga frågor;Religious Talk;Rel Talk;Religious Talk
+21;Telefonväkteri;Telefon;Telefonväkteri;Personality;Persnlty;Personality
+22;Resor och semester;Resor;Resor & semester;Public;Public;Public
+23;Fritid och hobby;Fritid;Fritid & hobby;College;College;College
+24;Jazzmusik;Jazz;Jazzmusik;Unassigned;;
+25;Countrymusik;Country;Countrymusik;Unassigned;;
+26;Nationell musik;Nation m;Nationell musik;Unassigned;;
+27;Klassisk pop;Oldies;Gamla godingar;Unassigned;;
+28;Folkmusik;Folkm;Folkmusik;Unassigned;;
+29;Dokumentärer;Dokument;Dokumentärer;Weather;Weather;Weather
+30;Provlarm;Prov;Prov;Emergency Test;Test;Emergency Test
+31;Larm;!!Larm!!;!!Larm!!;Emergency;ALERT !;ALERT! ALERT!

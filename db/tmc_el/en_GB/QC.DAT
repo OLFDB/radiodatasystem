@@ -1,0 +1,33 @@
+CODE;L2;L3;L4_Q0;L4_Q1;L4_Q2;L4_Q3;L4_Q4;L4_Q5
+1;1/2 miles;5 mph;1;1;less than 10 m;5 %;5 mph;up to 5 min
+2;1 miles;5 mph;2;2;less than 20 m;10 %;5 mph;up to 10 min
+3;2 miles;10 mph;3;3;less than 30 m;15 %;10 mph;up to 15 min
+4;2 miles;10 mph;4;4;less than 40 m;20 %;10 mph;up to 20 min
+5;3 miles;15 mph;5;10;less than 50 m;25 %;15 mph;up to 25 min
+6;4 miles;20 mph;6;20;less than 60 m;30 %;20 mph;up to 30 min
+7;4 miles;20 mph;7;30;less than 70 m;35 %;20 mph;up to 35 min
+8;5 miles;25 mph;8;40;less than 80 m;40 %;25 mph;up to 40 min
+9;6 miles;30 mph;9;50;less than 90 m;45 %;30 mph;up to 45 min
+10;6 miles;30 mph;10;60;less than 100 m;50 %;30 mph;up to 50 min
+11;7 miles;35 mph;11;70;less than 110 m;55 %;35 mph;up to 1 hour
+12;9 miles;40 mph;12;80;less than 120 m;60 %;40 mph;up to 2 hours
+13;10 miles;40 mph;13;90;less than 130 m;65 %;40 mph;up to 3 hours
+14;11 miles;45 mph;14;100;less than 140 m;70 %;45 mph;up to 4 hours
+15;12 miles;45 mph;15;150;less than 150 m;75 %;45 mph;up to 5 hours
+16;15 miles;50 mph;16;200;less than 160 m;80 %;50 mph;up to 6 hours
+17;20 miles;55 mph;17;250;less than 170 m;85 %;55 mph;up to 7 hours
+18;20 miles;55 mph;18;300;less than 180 m;90 %;55 mph;up to 8 hours
+19;25 miles;60 mph;19;350;less than 190 m;95 %;60 mph;up to 9 hours
+20;30 miles;60 mph;20;400;less than 200 m;100 %;60 mph;up to 10 hours
+21;30 miles;65 mph;21;450;less than 210 m;-;65 mph;up to 11 hours
+22;35 miles;70 mph;22;500;less than 220 m;-;70 mph;up to 12 hours
+23;35 miles;70 mph;23;550;less than 230 m;-;70 mph;up to 18 hours
+24;40 miles;75 mph;24;600;less than 240 m;-;75 mph;up to 24 hours
+25;45 miles;80 mph;25;650;less than 250 m;-;80 mph;up to 30 hours
+26;45 miles;80 mph;26;700;less than 260 m;-;80 mph;up to 36 hours
+27;50 miles;-;27;750;less than 270 m;-;85 mph;up to 42 hours
+28;55 miles;-;28;800;less than 280 m;-;85 mph;up to 48 hours
+29;55 miles;-;30;850;less than 290 m;-;90 mph;up to 54 hours
+30;60 miles;-;32;900;less than 300 m;-;95 mph;up to 60 hours
+31;60 miles;-;34;950;-;-;95 mph;up to 66 hours
+0;> 60 miles;-;36;1000;-;0%;100 mph;up to 72 hours

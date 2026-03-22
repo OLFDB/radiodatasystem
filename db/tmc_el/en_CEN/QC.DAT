@@ -1,0 +1,33 @@
+CODE;L2;L3;L4_Q0;L4_Q1;L4_Q2;L4_Q3;L4_Q4;L4_Q5
+1;1 km;5 km/h;1;1;less than 10 m;5 %;5 km/h;up to 5 min
+2;2 km;10 km/h;2;2;less than 20 m;10 %;10 km/h;up to 10 min
+3;3 km;15 km/h;3;3;less than 30 m;15 %;15 km/h;up to 15 min
+4;4 km;20 km/h;4;4;less than 40 m;20 %;20 km/h;up to 20 min
+5;5 km;25 km/h;5;10;less than 50 m;25 %;25 km/h;up to 25 min
+6;6 km;30 km/h;6;20;less than 60 m;30 %;30 km/h;up to 30 min
+7;7 km;35 km/h;7;30;less than 70 m;35 %;35 km/h;up to 35 min
+8;8 km;40 km/h;8;40;less than 80 m;40 %;40 km/h;up to 40 min
+9;9 km;45 km/h;9;50;less than 90 m;45 %;45 km/h;up to 45 min
+10;10 km;50 km/h;10;60;less than 100 m;50 %;50 km/h;up to 50 min
+11;12 km;55 km/h;11;70;less than 110 m;55 %;55 km/h;up to 1 hour
+12;14 km;60 km/h;12;80;less than 120 m;60 %;60 km/h;up to 2 hours
+13;16 km;65 km/h;13;90;less than 130 m;65 %;65 km/h;up to 3 hours
+14;18 km;70 km/h;14;100;less than 140 m;70 %;70 km/h;up to 4 hours
+15;20 km;75 km/h;15;150;less than 150 m;75 %;75 km/h;up to 5 hours
+16;25 km;80 km/h;16;200;less than 160 m;80 %;80 km/h;up to 6 hours
+17;30 km;85 km/h;17;250;less than 170 m;85 %;85 km/h;up to 7 hours
+18;35 km;90 km/h;18;300;less than 180 m;90 %;90 km/h;up to 8 hours
+19;40 km;95 km/h;19;350;less than 190 m;95 %;95 km/h;up to 9 hours
+20;45 km;100 km/h;20;400;less than 200 m;100 %;100 km/h;up to 10 hours
+21;50 km;105 km/h;21;450;less than 210 m;-;105 km/h;up to 11 hours
+22;55 km;110 km/h;22;500;less than 220 m;-;110 km/h;up to 12 hours
+23;60 km;115 km/h;23;550;less than 230 m;-;115 km/h;up to 18 hours
+24;65 km;120 km/h;24;600;less than 240 m;-;120 km/h;up to 24 hours
+25;70 km;125 km/h;25;650;less than 250 m;-;125 km/h;up to 30 hours
+26;75 km;130 km/h;26;700;less than 260 m;-;130 km/h;up to 36 hours
+27;80 km;-;27;750;less than 270 m;-;135 km/h;up to 42 hours
+28;85 km;-;28;800;less than 280 m;-;140 km/h;up to 48 hours
+29;90 km;-;30;850;less than 290 m;-;145 km/h;up to 54 hours
+30;95 km;-;32;900;less than 300 m;-;150 km/h;up to 60 hours
+31;100 km;-;34;950;-;-;155 km/h;up to 66 hours
+0;> 100 km;-;36;1000;-;0%;160 km/h;up to 72 hours

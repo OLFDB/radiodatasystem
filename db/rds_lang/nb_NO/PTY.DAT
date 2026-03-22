@@ -1,0 +1,33 @@
+PTY;RDS;RDS8;RDS16;RBDS;RBDS8;RBDS16
+0;Ingen programtype eller udefinert;Ikke PTY;Ikke PTY;No program type or undefined;None;None
+1;Nyheter;Nyheter;Nyheter;News;News;News
+2;Aktuell reportasje;Aktuelt;Aktuelt;Information;Inform;Information
+3;Informasjon;Info;Informasjon;Sports;Sports;Sports
+4;Sport;Sport;Sport;Talk;Talk;Talk
+5;Undervisning;Undervsn;Undervisning;Rock;Rock;Rock
+6;Radioteater;Teater;Radioteater;Classic Rock;Cls Rock;Classic Rock
+7;Kultur;Kultur;Kultur;Adult Hits;Adlt Hit;Adult Hits
+8;Vitenskap;Vitenskp;Vitenskap;Soft Rock;Soft Rck;Soft Rock
+9;Underholdning;Underh;Underholdning;Top 40;Top 40;Top 40
+10;Pop musikk;Pop mus;Pop musikk;Country;Country;Country
+11;Rock musikk;Rock mus;Rock musikk;Oldies;Oldies;Oldies
+12;Lett musikk;Lett mus;Lett musikk;Soft;Soft;Soft
+13;Underholdningsmusikk;Undh mus;Lett klassisk;Nostalgia;Nostalga;Nostalgia
+14;Klassisk musikk;Klas mus;Klassisk musikk;Jazz;Jazz;Jazz
+15;Diverse musikk;Div mus;Diverse musikk;Classical;Classicl;Classical
+16;Værmelding;Vær;Værmelding;Rhythm and Blues;R & B;Rhythm and Blues
+17;Økonomi;Økonomi;Økonomi;Soft Rhythm and Blues;Soft R&B;Soft R & B
+18;Barneprogram;Barn;Barneprogram;Foreign Language;Language;Foreign Language
+19;Sosialprogram;Sosial;Sosialprogram;Religious Music;Rel Musc;Religious Music
+20;Religion;Religion;Religion;Religious Talk;Rel Talk;Religious Talk
+21;Innringing;Ring inn;Ring inn;Personality;Persnlty;Personality
+22;Reiseprogram;Reise;Reiseliv;Public;Public;Public
+23;Fritidsprogram;Fritid;Fritid;College;College;College
+24;Jazz;Jazz;Jazz musikk;Unassigned;;
+25;Countrymusikk;Country;Countrymusikk;Unassigned;;
+26;Nasjonal musikk;Nasj mus;Nasjonal musikk;Unassigned;;
+27;Gammelpop;Gml pop;Gammelpop;Unassigned;;
+28;Folkemusikk;Folk mus;Folkemusikk;Unassigned;;
+29;Dokumentar;Dok;Dokumentar;Weather;Weather;Weather
+30;Alarm Test;Test;Alarm test;Emergency Test;Test;Emergency Test
+31;Alarm;Alarm!;Alarm!;Emergency;ALERT !;ALERT! ALERT!

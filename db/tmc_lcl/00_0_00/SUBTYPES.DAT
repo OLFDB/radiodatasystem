@@ -1,0 +1,105 @@
+CLASS;TCD;STCD;SDESC;SNATCODE;SNATDESC
+A;5;1;Sea;1;Sea
+A;5;2;Lake;2;Lake
+A;6;1;Tourist area;1;Tourist area
+A;6;2;Metropolitan Area;2;Metropolitan Area
+A;6;3;Industrial area;3;Industrial area
+A;6;4;Traffic area;4;Traffic area
+A;6;5;Meterological area;5;Meterological area
+A;6;6;Carpool area;6;Carpool area
+A;6;7;Park and ride area;7;Park and ride area
+A;6;8;Car park area;8;Car pool area
+A;9;1;Rural county;1;Rural county
+A;9;2;Urban county;2;Urban county
+L;1;1;Motorway;1;Motorway
+L;1;2;1st class Road;2;1st class Road
+L;1;3;2nd class Road;3;2nd class Road
+L;1;4;3rd class Road;4;3rd class Road
+L;2;1;Ring motorway;1;Ring motorway
+L;2;2;Other ring road;2;Other ring road
+L;6;1;Ferry;1;Ferry
+L;6;2;Vehicular rail link;2;Vehicular rail link
+P;1;1;Motorway intersection;1;Motorway intersection
+P;1;2;Motorway triangle;2;Motorway triangle
+P;1;3;Motorway junction;3;Motorway junction
+P;1;4;Motorway exit;4;Motorway exit
+P;1;5;Motorway entrance;5;Motorway entrance
+P;1;6;Flyover;6;Flyover
+P;1;7;Underpass;7;Underpass
+P;1;8;Roundabout;8;Roundabout
+P;1;9;Gyratory;9;Gyratory
+P;1;10;Traffic lights;10;Traffic lights
+P;1;11;Cross-roads;11;Cross-roads
+P;1;12;T-junction;12;T-junction
+P;1;13;Intermediate node;13;Intermediate node
+P;1;14;Connection;14;Connection
+P;1;15;Exit;15;Exit
+P;2;1;Distance marker;1;Distance marker
+P;2;2;Traffic monitoring station;2;Trffic monitoring station
+P;3;1;Tunnel;1;Tunnel
+P;3;2;Bridge;2;Bridge
+P;3;3;Service area;3;Service area
+P;3;4;Rest area;4;Rest area
+P;3;5;View point;5;View point
+P;3;6;Carpool point;6;Carpool point
+P;3;7;Park and ride site;7;Park and ride site
+P;3;8;Car park;8;Car park
+P;3;9;Kiosk;9;Kiosk
+P;3;10;Kiosk with WC;10;Kiosk with WC
+P;3;11;Petrol station;11;Petrol station
+P;3;12;Petrol station with kiosk;12;Petrol station with kiosk
+P;3;13;Motel;13;Motel
+P;3;14;Border/frontier;14;Border/frontier
+P;3;15;Customs post;15;Customs post
+P;3;16;Toll plaza;16;Toll plaza
+P;3;17;Ferry terminal;17;Ferry terminal
+P;3;18;Harbour;18;Harbour
+P;3;19;Square;19;Square
+P;3;20;Fair;20;Fair
+P;3;21;Garage;21;Garage
+P;3;22;Underground garage;22;Underground garage
+P;3;23;Retail park;23;Retail park
+P;3;24;Theme park;24;Theme park
+P;3;25;Tourist attraction;25;Tourist attraction
+P;3;26;University;26;University
+P;3;27;Airport;27;Airport
+P;3;28;Station;28;Station
+P;3;29;Hospital;29;Hospital
+P;3;30;Church;30;Church
+P;3;31;Stadium;31;Stadium
+P;3;32;Palace;32;Palace
+P;3;33;Castle;33;Castle
+P;3;34;Town hall;34;Town hall
+P;3;35;Exhibition/convention centre;35;Exhibition/convention centre
+P;3;36;Community;36;Community
+P;3;37;Place name;37;Place name
+P;3;38;Dam;38;Dam
+P;3;39;Dike;39;Dike
+P;3;40;Aqueduct;40;Aqueduct
+P;3;41;Lock;41;Lock
+P;3;42;Mountain crossing/pass;42;Mountain crossing/pass
+P;3;43;Railroad crossing;43;Railroad crossing
+P;3;44;Wade;44;Wade
+P;3;45;Ferry;45;Ferry
+P;3;46;Industrial area;46;Industrial area
+P;3;47;Viaduct;47;Viaduct
+P;5;1;Underground parking garage;1;Underground parking garage
+P;5;2;Car park;2;Car park
+P;5;3;Parking garage;3;Parking garage
+P;5;5;Park and ride side;5;Park and ride side
+P;5;6;Rest area parking;6;Rest area parking
+P;5;7;Campground;7;Campground
+P;6;1;Airport;1;Airport
+P;6;2;Station;2;Station
+P;6;3;Harbour;3;Harbour
+P;6;4;Tunnel;4;Tunnel
+P;6;5;Bridge;5;Bridge
+P;6;6;Ferry;6;Ferry
+P;6;7;Square;7;Square
+P;6;8;Fair;8;Fair
+P;6;9;Retail park;9;Retail park
+P;6;10;Theme park;10;Theme park
+P;6;11;Tourist attraction;11;Tourist attraction
+P;6;12;Stadium;12;Stadium
+P;6;13;Exhibition/convention centre;13;Exhibition/convention centre
+P;6;14;Place name;14;Place name

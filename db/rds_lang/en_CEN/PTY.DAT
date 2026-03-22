@@ -1,0 +1,33 @@
+PTY;RDS;RDS8;RDS16;RBDS;RBDS8;RBDS16
+0;No programme type or undefined;None;None;No program type or undefined;None;None
+1;News;News;News;News;News;News
+2;Current Affairs;Affairs;Current Affairs;Information;Inform;Information
+3;Information;Info;Information;Sports;Sports;Sports
+4;Sport;Sport;Sport;Talk;Talk;Talk
+5;Education;Educate;Education;Rock;Rock;Rock
+6;Drama;Drama;Drama;Classic Rock;Cls Rock;Classic Rock
+7;Culture;Culture;Culture;Adult Hits;Adlt Hit;Adult Hits
+8;Science;Science;Science;Soft Rock;Soft Rck;Soft Rock
+9;Varied;Varied;Varied Speech;Top 40;Top 40;Top 40
+10;Pop Music;Pop M;Pop Music;Country;Country;Country
+11;Rock Music;Rock M;Rock Music;Oldies;Oldies;Oldies
+12;Easy Listening Music;Easy M;Easy Listening;Soft;Soft;Soft
+13;Light Classical Music;Light M;Light Classics M;Nostalgia;Nostalga;Nostalgia
+14;Serious Classical Music;Classics;Serious Classics;Jazz;Jazz;Jazz
+15;Other Music;Other M;Other Music;Classical;Classicl;Classical
+16;Weather;Weather;Weather & Metr;Rhythm and Blues;R & B;Rhythm and Blues
+17;Finance;Finance;Finance;Soft Rhythm and Blues;Soft R&B;Soft R & B
+18;Children's Programmes;Children;Children's Progs;Foreign Language;Language;Foreign Language
+19;Social Affairs;Social;Social Affairs;Religious Music;Rel Musc;Religious Music
+20;Religion;Religion;Religion;Religious Talk;Rel Talk;Religious Talk
+21;Phone In;Phone In;Phone In;Personality;Persnlty;Personality
+22;Travel;Travel;Travel & Touring;Public;Public;Public
+23;Leisure;Leisure;Leisure & Hobby;College;College;College
+24;Jazz Music;Jazz;Jazz Music;Unassigned;;
+25;Country Music;Country;Country Music;Unassigned;;
+26;National Music;Nation M;National Music;Unassigned;;
+27;Oldies Music;Oldies;Oldies Music;Unassigned;;
+28;Folk Music;Folk M;Folk Music;Unassigned;;
+29;Documentary;Document;Documentary;Weather;Weather;Weather
+30;Alarm Test;TEST;Alarm Test;Emergency Test;Test;Emergency Test
+31;Alarm;Alarm !;Alarm - Alarm !;Emergency;ALERT !;ALERT! ALERT!

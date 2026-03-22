@@ -1,0 +1,6 @@
+db/rds_lang/*.db	/usr/share/rds
+db/rds_lang/*.sql.gz	/usr/share/rds
+db/tmc_el/*.db		/usr/share/rds
+db/tmc_el/*.sql.gz	/usr/share/rds
+db/tmc_lcl/*.db		/usr/share/rds
+db/tmc_lcl/*.sql.gz	/usr/share/rds

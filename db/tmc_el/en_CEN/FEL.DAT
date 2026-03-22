@@ -1,0 +1,120 @@
+CODE;TEXT;TEXT_Q0;TEXT_Q1;TEXT_QN;N;Q;T;D;U;C;R
+80;heavy traffic has to be expected;;;;F;;L;1;;32;A4F
+81;traffic congestion has to be expected;;;;F;;L;1;U;32;A9F
+82;($Q sets of) roadworks. Heavy traffic has to be expected;roadworks. Heavy traffic has to be expected;;;F;0;L;1;;32;E1.A4F
+83;closed ahead. Heavy traffic expected;;;;F;;L;1;U;32;C3.A4F
+84;major event. Heavy traffic has to be expected;;;;F;;L;1;;32;P1.A4F
+85;sports meeting. Heavy traffic has to be expected;;;;F;;L;1;;32;P2.A4F
+86;fair. Heavy traffic has to be expected;;;;F;;L;1;;32;P6.A4F
+87;evacuation. Heavy traffic has to be expected;;;;F;;L;1;;32;P49.A4F
+88;traffic congestion forecast withdrawn;;;;F;;(L);1;;32;A96F
+89;message cancelled;;;;S;;;;;32;
+1151;($Q probability of) heavy snowfall;heavy snowfall;;;F;3;L;2;U;33;H1F
+1152;($Q probability of) snowfall;snowfall;;;F;3;L;2;;33;H2F
+1129;($Q probability of) winter storm;winter storm;;;F;3;L;2;U;33;H19F
+1131;($Q probability of) blizzard;blizzard;;;F;3;L;2;U;33;H20F
+1133;($Q probability of) damaging hail;damaging hail;;;F;3;L;2;U;33;H21F
+1153;($Q probability of) hail;hail;;;F;3;L;2;;33;H3F
+1154;($Q probability of) sleet;sleet;;;F;3;L;2;;33;H4F
+1155;($Q probability of) thunderstorms;thunderstorms;;;F;3;L;2;;33;H5F
+1327;($Q probability of) sandstorms;sandstorms;;;F;3;L;2;U;33;L13F
+1156;($Q probability of) heavy rain;heavy rain;;;F;3;L;2;;33;H6F
+1157;($Q probability of) rain;rain;;;F;3;L;2;;33;H7F
+1158;($Q probability of) showers;showers;;;F;3;L;2;;33;H8F
+1159;($Q probability of) heavy frost;heavy frost;;;F;3;L;2;;33;H9F
+1160;($Q probability of) frost;frost;;;F;3;L;2;;33;H10F
+1117;($Q probability of) overcast weather;overcast weather;;;F;3;L;2;;33;H11F
+1118;($Q probability of) mostly cloudy;mostly cloudy;;;F;3;L;2;;33;H12F
+1119;($Q probability of) partly cloudy;partly cloudy;;;F;3;L;2;;33;H13F
+1120;($Q probability of) sunny periods;sunny periods;;;F;3;L;2;;33;H14F
+1121;($Q probability of) clear weather;clear weather;;;F;3;L;2;;33;H15F
+1122;($Q probability of) sunny weather;sunny weather;;;F;3;L;2;;33;H16F
+1123;($Q probability of) mostly dry weather;mostly dry weather;;;F;3;L;2;;33;H17F
+1124;($Q probability of) dry weather;dry weather;;;F;3;L;2;;33;H18F
+1125;sunny periods and with ($Q probability of) showers;sunny periods and with showers;;;F;3;L;2;;33;H14F.H8F
+1315;($Q probability of) dense fog;dense fog;;;F;3;L;2;U;33;L1F
+1306;($Q probability of) fog;fog;;;F;3;L;2;;33;L2F
+1316;($Q probability of) patchy fog;patchy fog;;;F;3;L;2;;33;L3F
+1317;($Q probability of) freezing fog;freezing fog;;;F;3;L;2;U;33;L4F
+1300;snowfall and fog (visibility reduced to $Q) expected;snowfall and fog expected;;;F;2;L;2;U;33;L2.H2F
+1140;weather forecast withdrawn;;;;F;;(L);2;;33;H95F
+1141;fog forecast withdrawn;;;;F;;(L);2;;33;H96F
+1138;severe weather warnings cancelled;;;;F;;(L);2;;33;H97F
+1139;message cancelled;;;;S;;;;;33;
+1046;ice expected (above $Q hundred metres);ice expected;;;F;0;L;2;;34;G6F
+1049;icy patches expected (above $Q hundred metres);icy patches expected;;;F;0;L;2;U;34;G28F
+1051;black ice expected (above $Q hundred metres);black ice expected;;;F;0;L;2;U;34;G7F
+1052;freezing rain expected (above $Q hundred metres);freezing rain expected;;;F;0;L;2;U;34;G8F
+1053;snow drifts expected (above $Q hundred metres);snow drifts expected;;;F;0;L;2;;34;G15F
+1143;slippery road expected (above $Q hundred metres);slippery road expected;;;F;0;L;2;;34;G3F
+1071;road conditions forecast withdrawn;;;;F;;(L);2;;34;G99F
+1072;message cancelled;;;;S;;;;;34;
+1328;($Q probability of) air quality: good;air quality: good;;;F;3;L;2;;35;L14F
+1329;($Q probability of) air quality: fair;air quality: fair;;;F;3;L;2;;35;L15F
+1330;($Q probability of) air quality: poor;air quality: poor;;;F;3;L;2;;35;L16F
+1331;($Q probability of) air quality: very poor;air quality: very poor;;;F;3;L;2;;35;L17F
+1311;($Q probability of) severe exhaust pollution;severe exhaust pollution;;;F;3;L;2;;35;L7F
+1333;($Q probability of) smog;smog;;;F;3;L;2;;35;L18F
+1334;($Q probability of) pollen count: high;pollen count: high;;;F;3;L;2;;35;L19F
+1335;($Q probability of) pollen count: medium;pollen count: medium;;;F;3;L;2;;35;L20F
+1336;($Q probability of) pollen count: low;pollen count: low;;;F;3;L;2;;35;L21F
+1339;air quality improved;;;;F;;(L);2;;35;L97F
+2032;message cancelled;;;;S;;;;;35;
+1251;($Q probability of) tornadoes;tornadoes;;;F;3;L;2;U;36;J1F
+1252;hurricane force winds ($Q);hurricane force winds;;;F;4;L;2;U;36;J2F
+1253;gales ($Q);gales;;;F;4;L;2;U;36;J3F
+1254;storm force winds ($Q);storm force winds;;;F;4;L;2;;36;J4F
+1255;strong winds ($Q);strong winds;;;F;4;L;2;;36;J5F
+1206;moderate winds ($Q);moderate winds;;;F;4;L;2;;36;J6F
+1207;light winds ($Q);light winds;;;F;4;L;2;;36;J7F
+1208;calm weather;;;;F;;L;2;;36;J8F
+1256;strong wind forecast withdrawn;;;;F;;(L);2;;36;J94F
+1216;tornado watch cancelled;;;;F;;(L);2;;36;J97F
+1218;wind forecast withdrawn;;;;F;;(L);2;;36;J98F
+1219;message cancelled;;;;S;;;;;36;
+1351;maximum temperature (of $Q);maximum temperature;;;F;6;L;2;;37;M1F
+1359;temperature rising (to $Q);temperature rising;;;F;6;L;2;;37;M8F
+1401;minimum temperature (of $Q);minimum temperature;;;F;6;L;2;;37;M9F
+1360;temperature falling rapidly (to $Q);temperature falling rapidly;;;F;6;L;2;;37;M10F
+1361;temperature ($Q);temperature;;;F;6;L;2;;37;M11F
+1362;effective temperature, with wind chill ($Q);effective temperature, with wind chill;;;F;6;L;2;;37;M12F
+1364;extreme heat (up to $Q);extreme heat;;;F;6;L;2;;37;M14F
+1352;hot (maximum temperature $Q);hot;;;F;6;L;2;;37;M2F
+1353;warm (maximum temperature $Q);warm;;;F;6;L;2;;37;M3F
+1354;mild (maximum temperature $Q);mild;;;F;6;L;2;;37;M4F
+1355;cool (maximum temperature $Q);cool;;;F;6;L;2;;37;M5F
+1356;cold (maximum temperature $Q);cold;;;F;6;L;2;;37;M6F
+1357;very cold (maximum temperature $Q);very cold;;;F;6;L;2;;37;M7F
+1365;extreme cold (of $Q);extreme cold;;;F;6;L;2;;37;M21F
+1402;very warm (minimum temperature $Q);very warm;;;F;6;L;2;;37;M15F
+1403;warm (minimum temperature $Q);warm;;;F;6;L;2;;37;M16F
+1404;mild (minimum temperature $Q);mild;;;F;6;L;2;;37;M17F
+1405;cool (minimum temperature $Q);cool;;;F;6;L;2;;37;M18F
+1406;cold (minimum temperature $Q);cold;;;F;6;L;2;;37;M19F
+1407;very cold (minimum temperature $Q);very cold;;;F;6;L;2;;37;M20F
+1408;less extreme temperatures expected;;;;F;;L;2;;37;M22F
+1358;message cancelled;;;;S;;;;;37;
+1680;delays ($Q) have to be expected;delays have to be expected;;;F;5;L;1;;38;Q1F
+1681;delays of several hours have to be expected;;;;F;;L;1;U;38;Q199F
+1682;closed ahead. Delays ($Q) have to be expected;closed ahead. Delays have to be expected;;;F;5;L;1;U;38;C3.Q1F
+1683;roadworks. Delays ($Q) have to be expected;roadworks. Delays have to be expected;;;F;5;L;1;;38;E1.Q1F
+1684;flooding. Delays ($Q) have to be expected;flooding. Delays have to be expected;;;F;5;L;1;U;38;F5.Q1F
+1685;major event. Delays ($Q) have to be expected;major event. Delays have to be expected;;;F;5;L;1;U;38;P1.Q1F
+1686;strike. Delays ($Q) have to be expected;strike. Delays have to be expected;;;F;5;L;1;U;38;P42.Q1F
+1687;delays of several hours for heavy lorries have to be expected;;;;F;;L;1;U;38;Q199.Z78F
+1688;long delays have to be expected;;;;F;;L;1;U;38;Q23F
+1689;very long delays have to be expected;;;;F;;L;1;U;38;Q25F
+1690;delay forecast withdrawn;;;;F;;(L);2;;38;Q97F
+1691;message cancelled;;;;S;;;;;38;
+1780;cancellations have to be expected;;;;F;;L;1;;39;Q9F
+1781;all services fully booked (until $Q);all services fully booked;;;F;7;L;1;U;39;Q6F
+1782;park and ride service will not be operating (until $Q);park and ride service will not be operating;;;F;7;L;2;U;39;Q12F
+1783;normal services will not be operating (until $Q);normal services will not be operating;;;F;7;L;2;U;39;Q14F
+1784;rail services will not be operating (until $Q);rail services will not be operating;;;F;7;L;2;U;39;Q15F
+1785;rapid transit service will not be operating (until $Q);rapid transit service will not be operating;;;F;7;L;2;U;39;Q20F
+1786;underground service will not be operating (until $Q);underground service will not be operating;;;F;7;L;2;U;39;Q19F
+1787;public transport will be on strike;;;;F;;L;2;U;39;Q22F
+1788;ferry service will not be operating (until $Q);ferry service will not be operating;;;F;7;L;2;U;39;Q30F
+39;reopening of bridge expected ($Q);reopening of bridge expected;;;F;7;L;2;;39;
+1789;normal services expected;;;;F;;L;2;;39;Q98F
+1790;message cancelled;;;;S;;;;;39;

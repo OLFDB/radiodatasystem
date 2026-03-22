@@ -1,0 +1,34 @@
+Source: librds
+Section: misc
+Priority: extra
+Maintainer: Tobias Lorenz <tobias.lorenz@gmx.net>
+Build-Depends: debhelper (>= 7.0.15)
+Standards-Version: 3.7.3
+Vcs-Svn: https://radiodatasystem.svn.sourceforge.net/svnroot/radiodatasystem/trunk
+Vcs-Browser: http://radiodatasystem.svn.sourceforge.net/viewvc/radiodatasystem/
+Homepage: http://sourceforge.net/projects/radiodatasystem/
+
+Package: librds
+Architecture: any
+Description: RDS library
+ This package contains the RDS library.
+
+Package: librds-bin
+Architecture: any
+Description: RDS library binaries
+ This package contains the RDS library binaries.
+
+Package: librds-data
+Architecture: any
+Description: RDS library data
+ This package contains the RDS library data.
+
+Package: librds-dev
+Architecture: any
+Description: RDS library development headers
+ This package contains the RDS library development headers.
+
+Package: librds-doc
+Architecture: any
+Description: RDS library documentation
+ This package contains the RDS library documentation.

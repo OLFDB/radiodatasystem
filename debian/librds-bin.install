@@ -1,0 +1,7 @@
+src/rdsdump		/usr/bin
+src/rdsrtcm*		/usr/bin
+src/rdstmc*		/usr/bin
+src/rdsdump.1		/usr/share/man/man1
+src/rdsrtcm.1*		/usr/share/man/man1
+src/rdstmc.1*		/usr/share/man/man1
+src/rds-db-import	/usr/bin

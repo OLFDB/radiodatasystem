@@ -1,0 +1,71 @@
+#!/bin/sh
+
+# Usage: rds-db-import [database.db] [schema.sql{.gz}] [datadir] [UTF-8] [datadir.diff]
+
+# defaults
+DB=$1
+SCHEMA=$2
+DATA=$3
+CONV=${4:-"UTF-8"}
+PATCH=$5
+
+# check if parameters are valid
+if [ -z "$DB" -o -z "$SCHEMA" ]; then
+  echo "Usage: rds-db-import [database.db] [schema.sql{.gz}] [datadir] [UTF-8] [datadir.diff]"
+  exit
+fi
+
+
+# reset database
+echo "DATABASE `basename "$DB" | sed -e 's/\..*$//'`"
+rm -rf "$DB"
+if [ "`basename "$SCHEMA" .gz`" = "`basename "$SCHEMA"`" ]; then
+	sqlite3 "$DB" < "$SCHEMA"
+else
+	zcat "$SCHEMA" | sqlite3 "$DB"
+fi
+
+# end here if no data to import
+[ -z "$DATA" ] && exit
+
+# create and import
+for FILE in $DATA/*; do
+  TABLE=`basename "$FILE" | sed -e 's/\..*$//'`
+  if [ "$TABLE" = "README" ]; then
+    # jump over README.DAT
+    continue
+  fi
+  echo -n "  TABLE $TABLE:"
+
+  # patch data
+  if [ -n "$PATCH" ]; then
+    echo -n " PATCH"
+    patch -d "$DATA" -p1 < "$PATCH"
+  fi
+
+  # convert data
+  echo -n " CONVERT"
+  if [ "$CONV" = "UTF-8" ]; then
+    COLUMNS=`head -1 "$FILE" | dos2unix | sed -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/'`
+    tail "$FILE" -n +2 | dos2unix | sed -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/' > "$FILE.tmp"
+  else
+    COLUMNS=`head -1 "$FILE" | dos2unix | sed -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/' | iconv -f "$CONV" -t UTF-8`
+    tail "$FILE" -n +2 | dos2unix | sed -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/' | iconv -f "$CONV" -t UTF-8 > "$FILE.tmp"
+  fi
+
+  # to SQL
+  echo -n " SQL"
+  echo "BEGIN TRANSACTION;" > "$FILE.sql"
+  while read VALUES; do
+    echo "INSERT INTO $TABLE ($COLUMNS) VALUES ($VALUES);" >> "$FILE.sql"
+  done < "$FILE.tmp"
+  echo "COMMIT TRANSACTION;" >> "$FILE.sql"
+
+  # import data
+  echo -n " DB"
+  sqlite3 "$DB" < "$FILE.sql"
+
+  # ready
+  rm -rf "$FILE.tmp" "$FILE.sql"
+  echo " READY."
+done
