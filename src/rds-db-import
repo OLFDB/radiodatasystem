@@ -1,5 +1,5 @@
 #!/bin/sh
-
+set -x
 # Usage: rds-db-import [database.db] [schema.sql{.gz}] [datadir] [UTF-8] [datadir.diff]
 
 # defaults
@@ -52,11 +52,12 @@ for FILE in $DATA*; do
     COLUMNS=`head -1 "$FILE" | dos2unix | sed -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/' | iconv -f "$CONV" -t UTF-8`
     tail -n 2 "$FILE" | dos2unix | sed -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/' | iconv -f "$CONV" -t UTF-8 > "$FILE.tmp"
   fi
-break
-  # to SQL
+  
+# to SQL
   echo -n " SQL"
   echo "BEGIN TRANSACTION;" > "$FILE.sql"
   while read VALUES; do
+    VALUES=$(echo $VALUES | tr '"' "'")
     echo "INSERT INTO $TABLE ($COLUMNS) VALUES ($VALUES);" >> "$FILE.sql"
   done < "$FILE.tmp"
   echo "COMMIT TRANSACTION;" >> "$FILE.sql"
