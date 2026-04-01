@@ -160,7 +160,7 @@ void rds_decode(uint16_t _pi, uint16_t _blk2, uint16_t _blk3, uint16_t _blk4)
     rds_program_t *rds_program_eon = NULL;
     rds_program_private_t *rds_program_current_private;
     uint8_t change = 0;
-
+   
     /* reset status */
     rds_decode_status = RDS_DECODE_STATUS_OK;
 
@@ -176,6 +176,9 @@ void rds_decode(uint16_t _pi, uint16_t _blk2, uint16_t _blk3, uint16_t _blk4)
 
     /* load program */
     rds_program_current = rds_program_load(ecc, _pi);
+    
+    
+    
     rds_program_current_private = (rds_program_private_t *) rds_program_current;
 
     /* decode components in every frame */
@@ -194,6 +197,8 @@ void rds_decode(uint16_t _pi, uint16_t _blk2, uint16_t _blk3, uint16_t _blk4)
     switch (gtc)
     {
     case 0: /* Basic tuning and switching information */
+            
+            
         rds_ta_decode((_blk2 >> 4) & 1);
         rds_ms_decode((_blk2 >> 3) & 1);
         rds_di_decode(_blk2 & 0x3, (_blk2 >> 2) & 0x1);
@@ -202,6 +207,7 @@ void rds_decode(uint16_t _pi, uint16_t _blk2, uint16_t _blk3, uint16_t _blk4)
         rds_ps_decode(_blk2 & 0x3, (_blk4 >> 8) & 0xff, (_blk4 >> 0) & 0xff);
         break;
     case 1: /* Programme Item Number and slow labelling codes */
+            
         rds_pin_decode((_blk4 >> 11) & 0x1f, (_blk4 >> 6) & 0x1f, (_blk4 >> 0) & 0x2f);
         if (gtv == 0)
         {
@@ -300,6 +306,7 @@ void rds_decode(uint16_t _pi, uint16_t _blk2, uint16_t _blk3, uint16_t _blk4)
         }
         break;
     case 2: /* RadioText */
+            
         if (gtv == 0)
         {
             rds_rt_decode_a((_blk2 >> 5) & 1, (_blk2 & 0x0f),
@@ -316,6 +323,7 @@ void rds_decode(uint16_t _pi, uint16_t _blk2, uint16_t _blk3, uint16_t _blk4)
         }
         break;
     case 3:
+            
         if (gtv == 0)   /* Application identification for Open Data */
         {
             rds_oda_decode_assign((_blk2 >> 1) & 0xf, _blk2 & 1, _blk3, _blk4);
@@ -326,6 +334,7 @@ void rds_decode(uint16_t _pi, uint16_t _blk2, uint16_t _blk3, uint16_t _blk4)
         }
         break;
     case 4:
+            
         if (gtv == 0)   /* Clock-time and date */
         {
             rds_ct_decode(((_blk2 & 3) << 15) | (_blk3 >> 1),
@@ -410,6 +419,7 @@ void rds_decode(uint16_t _pi, uint16_t _blk2, uint16_t _blk3, uint16_t _blk4)
         }
         break;
     case 8: /* Traffic Message Channel or ODA */
+            
         if (gtv == 0)
         {
 #ifdef ODA_TMC
@@ -982,7 +992,7 @@ void rds_program_save(rds_program_t *_rs)
     char af_str[512];
     time_t t;
     struct tm *tm;
-    char ct_str[25];
+    char ct_str[26];
 
     if (rds_db_program_open() != EXIT_SUCCESS)
         return;
