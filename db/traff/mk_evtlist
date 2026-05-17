@@ -1,0 +1,23 @@
+COLUMNS=`head -1 "$1" | dos2unix | sed -e 's/;/@/g' -e 's/\|/;/g' -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/' | iconv -f "iso-8859-1" -t  UTF-8`
+    tail -n +4 "$1" | dos2unix | sed -e 's/;/@/g' -e 's/\|/;/g' -e 's/ $//g' -e 's/;/","/g' -e 's/^/"/' -e 's/$/"/' | iconv -f "iso-8859-1" -t  UTF-8 > "$1.tmp"
+TABLE=EVENTS
+DB=traff.db
+
+# to SQL
+  echo -n " SQL"
+  echo "BEGIN TRANSACTION;" > "$1.sql"
+  while read VALUES; do
+    VALUES=$(echo $VALUES | tr '"' "'")
+    echo "INSERT INTO $TABLE ($COLUMNS) VALUES ($VALUES);" >> "$1.sql"
+  done < "$1.tmp"
+  echo "COMMIT TRANSACTION;" >> "$1.sql"
+
+  # import data
+  echo -n " DB"
+  sqlite3 "$DB" < "traff_evt.sql"
+  sqlite3 "$DB" < "$1.sql"
+
+  # ready
+  rm -rf "$1.tmp" "$1.sql"
+  echo " READY."
+
