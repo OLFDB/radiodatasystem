@@ -24,8 +24,12 @@ RASANT (Radio Aided Satellite Navigation Technique)
 
 Sources for TMC location code lists (from http://wiki.openstreetmap.org/wiki/TMC)
 ---------------------------------------------------------------------------------
-Germany		http://www.bast.de/nn_42744/DE/Aufgaben/abteilung-f/referat-f4/Location-Code-List/location-code-list-start.html
-Italy		https://www.ilportaledellautomobilista.it/http://vps.ilportaledellautomobilista.it:8080/portal/dt?JSPTabContainer.setSelected=JSPTabContainer%2FUtilita&last=false&targetPage=database
-		http://www.radio.rai.it/cciss/databasetmc.cfm
-Norway		http://www.vegvesen.no/en/Professional/Technology/RDS+TMC
-Sweden		http://www20.vv.se/tmc/document/Sweden2007.zip
+Germany		https://www.bast.de/DE/Themen/Digitales/HF_1/Massnahmen/LCL/location-code-list.html
+Italy		https://www.cciss.it/web/cciss/database-rds-tmc
+		Free download
+Norway		https://www.vegvesen.no/en/fag/technology/open-data/a-selection-of-open-data/rds-tmc/
+		Free Download
+Slovakia	https://www.cdb.sk/en/traffic-information-rds-tmc/lt-sk-v5-0.alej
+		Registration and License to be signed
+Sweden		https://bransch.trafikverket.se/en/startpage/operations/Operations-road/Traffic-information/The-Swedish-Location-Table-for-TMC/
+		Registration required
