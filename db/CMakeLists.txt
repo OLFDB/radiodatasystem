@@ -1,1 +1,5 @@
 add_subdirectory(traff)
+add_subdirectory(rds_lang)
+add_subdirectory(rds_program)
+add_subdirectory(tmc_lcl)
+add_subdirectory(tmc_el)

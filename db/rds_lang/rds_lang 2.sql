@@ -7,9 +7,7 @@ create table CC (
 	CID		NUMERIC(3),
 	NAME		CHAR(100),
 	COMMENT		CHAR(50),
-/*	PRIMARY KEY (ECC, CCD) ⚠️ Combination is not unique for Denmark and Spain */
-/*  use a seperate id */
-	id INTEGER PRIMARY KEY AUTOINCREMENT
+	PRIMARY KEY (ECC, CCD)
 );
 
 /* Language Identification Code */
