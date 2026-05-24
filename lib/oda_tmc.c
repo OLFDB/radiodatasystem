@@ -1834,10 +1834,10 @@ static void rds_oda_tmc_decode_multi_subsequent(uint8_t _ci, uint8_t _sgi, uint8
             rds_program_current_private->oda_tmc_fifo_cnt -= 16;
         }
     }
-    else if (rds_program_current_private->oda_tmc_last_gsi - 1 == _gsi)     /* groups 3..5 */
+    else if (((64 - rds_program_current_private->oda_tmc_fifo_cnt - 28)>=0) && rds_program_current_private->oda_tmc_last_gsi - 1 == _gsi)     /* groups 3..5 */
     {
         /* process free format (y11..z0) */
-        rds_program_current_private->oda_tmc_fifo |= _ff << (64 - rds_program_current_private->oda_tmc_fifo_cnt - 28);
+        rds_program_current_private->oda_tmc_fifo |= _ff << (64 - rds_program_current_private->oda_tmc_fifo_cnt - 28); //TODO: shift exponent might get negative
         rds_program_current_private->oda_tmc_fifo_cnt += 28;
     }
     rds_program_current_private->oda_tmc_last_gsi = _gsi;
