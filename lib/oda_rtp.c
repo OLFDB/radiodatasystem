@@ -65,10 +65,10 @@ void rds_oda_rtp_get_class(char *_str, size_t _size, uint8_t _rtp)
     (void) sqlite3_prepare(rds_db_lang, sql, (int) sizeof(sql), /*@-nullstate@*/ &stmt /*@+nullstate@*/, NULL);
 
     /* evaluate SQL results */
-    if (sqlite3_step(stmt) == SQLITE_ROW)
+    if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
     {
         /*@+ignoresigns@ @-mustfreefresh@*/
-        (void) strncpy(_str, sqlite3_column_text(stmt, 0), _size);
+        (void) strncpy(_str, (const char *)sqlite3_column_text(stmt, 0), _size);
         /*@-ignoresigns@ @+mustfreefresh@*/
     }
     else
@@ -125,11 +125,11 @@ void rds_oda_rtp_decode(uint8_t _x, uint16_t _y, uint16_t _z)
     if (rds_program_current_private->oda_rtp_ert == 0)
     {
         /* Content Type 1 */
-        for(i = 0; i <= length_marker_1; i++)
+        for(i = 0; i <= length_marker_1 && (i + start_marker_1) <= 64; i++)
             rds_program_current->oda_rtp[rds_program_current->oda_rtp_ct[0]][i] = rds_program_current->rt[start_marker_1+i];
 
         /* Content Type 2 */
-        for(i = 0; i <= length_marker_2; i++)
+        for(i = 0; i <= length_marker_2  && (i + start_marker_1) <= 64; i++)
             rds_program_current->oda_rtp[rds_program_current->oda_rtp_ct[1]][i] = rds_program_current->rt[start_marker_2+i];
     }
     else
