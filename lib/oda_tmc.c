@@ -2132,9 +2132,13 @@ void rds_oda_tmc_decode_assign(uint16_t _msg)
     {
         tmc_decode_system_sid((_msg >> 12) & 3, (_msg >> 6) & 0x3f, (_msg >> 4) & 3, (_msg >> 2) & 3, _msg & 3);
     }
+    else if (variant_code == 2)
+    {
+        rds_program_current->ecc=_msg & 255;
+    }
     else
     {
-        /* nothing is documented for the variant codes 2 and 3 */
+        /* nothing is documented for the variant code 3 */
         rds_decode_status = RDS_DECODE_STATUS_NOT_ASSIGNED;
     }
 }
