@@ -92,5 +92,7 @@ void rds_oda_tmc_dsp_save(rds_oda_tmc_dsp_t *_dsp);
 void rds_oda_tmc_dsp_save_all(void);
 #endif
 
+void convert_rds_charset_to_ascii(char* str);
+char * stringReplace(char *search, char *replace, char *string);
 
 #endif /* ODA_TMC_H */
