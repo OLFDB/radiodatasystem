@@ -419,6 +419,7 @@ static int tmc_db_lcl_open(void)
         if (sqlite3_open(&tmc_db_lcl_filename[0], &rds_oda_tmc_db_lcl) != 0)
         {
             (void) sqlite3_close(rds_oda_tmc_db_lcl);
+            printf("Failed to open lcl db\n");
             return EXIT_FAILURE;
         }
 
