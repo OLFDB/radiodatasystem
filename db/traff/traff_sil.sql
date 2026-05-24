@@ -6,6 +6,6 @@ create table SIL (
 	Text_Q	CHAR(1000),
 	Quantifier	CHAR(30),
 	Since	CHAR(40),
-	Comment	CHAR(200),
+	Notes	CHAR(200),
 	PRIMARY KEY (Class, Type)
 )
