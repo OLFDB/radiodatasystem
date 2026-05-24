@@ -52,19 +52,20 @@ void rds_ecc_get_iso_itu_cid(void)
 
     /* SQL request */
     (void) snprintf(&sql[0], sizeof(sql), "select ISO,ITU,CID from CC where ECC='%2.2hX' and CCD='%1.1hX'",
-                    (unsigned short int) rds_program_current->ecc,
+                    (unsigned short int) 0xE0, //rds_program_current->ecc, TODO: Fix ecc decoding
                     (unsigned short int) rds_pi_cc(rds_program_current->pi));
     /*@-nullpass@*/
     (void) sqlite3_prepare(rds_db_lang, sql, (int) sizeof(sql), /*@-nullstate@*/ &stmt /*@+nullstate@*/, NULL);
 
     /* evaluate SQL results */
-    if (sqlite3_step(stmt) == SQLITE_ROW)
+    if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
     {
         /*@+ignoresigns@ @-mustfreefresh@*/
-        (void) strncpy(&rds_program_current->iso[0], sqlite3_column_text(stmt, 0), 2);
+        (void) strncpy(&rds_program_current->iso[0], (const char *)sqlite3_column_text(stmt, 0), 2);
         /*@-ignoresigns@ @+mustfreefresh@*/
         rds_program_current->itu = (uint8_t) sqlite3_column_int(stmt, 1);
 #ifdef ODA_TMC
+        
         rds_program_current->oda_tmc_cid = (uint8_t) sqlite3_column_int(stmt, 2);
 #endif
     }
@@ -105,10 +106,10 @@ void rds_ecc_get_name(char *_str, size_t _size, uint8_t _ecc, uint8_t _cc)
     (void) sqlite3_prepare(rds_db_lang, sql, (int) sizeof(sql), /*@-nullstate@*/ &stmt /*@+nullstate@*/, NULL);
 
     /* evaluate SQL results */
-    if (sqlite3_step(stmt) == SQLITE_ROW)
+    if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
     {
         /*@+ignoresigns@ @-mustfreefresh@*/
-        (void) strncpy(_str, sqlite3_column_text(stmt, 0), _size);
+        (void) strncpy(_str, (const char *)sqlite3_column_text(stmt, 0), _size);
         /*@-ignoresigns@ @+mustfreefresh@*/
     }
 
