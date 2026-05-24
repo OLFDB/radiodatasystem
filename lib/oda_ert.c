@@ -83,7 +83,7 @@ void rds_oda_ert_decode(uint8_t _bpac, uint16_t _y, uint16_t _z)
         rds_program_current_private->oda_ert_str[4*_bpac+2] = _z >> 8;
         change = 1;
     }
-    if (rds_program_current_private->oda_ert_str[4*_bpac+3] != _z & 0xff)
+    if (rds_program_current_private->oda_ert_str[4*_bpac+3] != (_z & 0xff))
     {
         rds_program_current_private->oda_ert_str[4*_bpac+3] = _z & 0xff;
         change = 1;
