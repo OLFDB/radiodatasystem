@@ -35,6 +35,8 @@ int rds_decode_v4l(FILE *fd);
 int rds_decode_raw(FILE *fd);
 int rds_decode_csv(FILE *fd);
 int rds_decode_smp(FILE *fd);
+int rds_decode_dab();
+int rds_decode_spy(FILE *fd);
 
 
 #endif /* FILTERS_H */
