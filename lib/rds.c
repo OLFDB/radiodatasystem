@@ -878,15 +878,17 @@ rds_program_t *rds_program_load(uint8_t _ecc, uint16_t _pi)
                         /* do something with it */
                         rds_af_handle(&rds_program[i].public.af[0], &rds_program[i].af, af[0], af[1]);
                         /* overstep first comma */
-                        while (af_str[j] != ',')
-                            j++;
+                    }
+                    // always step over to next pair
+                    while (af_str[j] != ',')
                         j++;
-                        /* overstep second comma */
-                        while ((af_str[j] != ',') && (af_str[j] != '\0'))
-                            j++;
-                        if (af_str[j] != '\0')
-                            j++;
-                    };
+                    j++;
+                    /* overstep second comma */
+                    while ((af_str[j] != ',') && (af_str[j] != '\0'))
+                        j++;
+                    if (af_str[j] != '\0')
+                        j++;
+                    
                 }
 
                 /* handle CT */
