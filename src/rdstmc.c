@@ -34,9 +34,12 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-#include "rds.h"
+#include "../lib/rds.h"
 #include "filters.h"
 #include "print.h"
+#include "traff.h"
+
+#include <locale.h>
 
 
 static sqlite3 *rds_oda_tmc_db_el;
@@ -173,7 +176,7 @@ static char *tmc_get_duration_str(uint8_t n, uint8_t d, uint8_t dp)
 
 static void tmc_print_location(uint16_t lcd, rds_oda_tmc_lcl_location_t *l, uint8_t dir, uint8_t dir_ub)
 {
-	char t[256] = "";
+	char t[512] = "";
 
 	/* loc = 0: reserved */
 	if (lcd == 0) {
@@ -287,7 +290,7 @@ static char *tmc_get_quantifier(uint8_t q, uint8_t n)
 		(void) sqlite3_prepare(rds_oda_tmc_db_el, sql, (int) sizeof(sql), &stmt, NULL);
 		rc = sqlite3_step(stmt);
 		if (rc == SQLITE_ROW) {
-			(void) strncpy(&s[0], sqlite3_column_text(stmt, 0), sizeof(s));
+			(void) strncpy(&s[0], (const char *)sqlite3_column_text(stmt, 0), sizeof(s));
 		} else {
 		}
 		(void) sqlite3_finalize(stmt);
@@ -387,8 +390,6 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 	rds_oda_tmc_lcl_location_t l1, l2, l3, l4;
 	unsigned int diversion_nr;
 
-	printf("========================================\n");
-
 	/* message receive time */
 	printf("Message received at ");
 	print_time(msg->receive_time);
@@ -449,20 +450,20 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 	}
 
 	/* get administrative area reference */
-//	if (l1.pol_lcd) {
-//		printf("pol_lcd:");
-//		rds_oda_tmc_lcl_get_location(l1.pol_lcd, &l3);
-//		tmc_print_location(msg->loc, &l3, msg->dir, 0);
-//		printf("\n");
-//	}
+	if (l1.pol_lcd) {
+		printf("pol_lcd:");
+		rds_oda_tmc_lcl_get_location(l1.pol_lcd, &l3);
+		tmc_print_location(msg->loc, &l3, msg->dir, 0);
+		printf("\n");
+	}
 
 	/* get other area reference */
-//	if (l1.oth_lcd) {
-//		printf("oth_lcd:");
-//		rds_oda_tmc_lcl_get_location(l1.oth_lcd, &l3);
-//		tmc_print_location(msg->loc, &l3, msg->dir, 0);
-//		printf("\n");
-//	}
+	if (l1.oth_lcd) {
+		printf("oth_lcd:");
+		rds_oda_tmc_lcl_get_location(l1.oth_lcd, &l3);
+		tmc_print_location(msg->loc, &l3, msg->dir, 0);
+		printf("\n");
+	}
 
 	/* get segment reference */
 	if (l1.seg_lcd) {
@@ -502,7 +503,7 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 	int start_time = -1;
 	int stop_time = -1;
 	int evt_cnt = 1;
-	int evt_qnt[3] = {0,0,0};
+	int evt_qnt[4] = {0,0,0,0};
 	for (i = 0; i < msg->opt_cnt; i++) {
 		unsigned short data = msg->opt[i].data;
 		unsigned short dur = msg->dur;
@@ -524,12 +525,8 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 	}
 
 	/* Quantifier */
-	//printf("qnt=<%i>", msg->qnt);
-	//printf("\n");
-
-	/* text */
-	rds_oda_tmc_get_phrase(&t[0], sizeof(t), 0, msg->evt, evt_qnt[0]);
-	printf("%s\n", &t[0]);
+	printf("qnt=<%i>", msg->qnt);
+	printf("\n");
 
 	/* duration */
 	if ((msg->dur > 0) && (msg->stop_time==-1)) {
@@ -542,6 +539,14 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 	/* optional message content */
 	diversion_nr = 0;
 	evt_cnt = 1;
+    int qrep=0;
+    int dist_hpl_ppl=0;
+    int hla=0;
+    int hlr=0;
+    int hpd=0;
+    int sublbl=0;
+    int length=0;
+    char* quantifier;
 	for (i = 0; i < msg->opt_cnt; i++) {
 		unsigned short data = msg->opt[i].data;
 		unsigned short dur = msg->dur;
@@ -554,14 +559,22 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 			// already covered
 			break;
 		case 2:	/* Length of route affected */
-			if (data == 0)
-				printf("$L='Problem extends for more than 100 km'");
-			else if ((data >= 1) && (data <= 10))
-				printf("$L='Length of problem is %d km'", data);
-			else if ((data >= 11) && (data <= 15))
-				printf("$L='Length of problem is %d km'", 12+(data-11)*2);
-			else if ((data >= 16) && (data <= 31))
-				printf("$L='Length of problem is %d km'", 25+(data-16)*5);
+                if (data == 0) {
+                    printf("$L='Problem extends for more than 100 km'");
+                    length=101;
+                }
+                else if ((data >= 1) && (data <= 10)) {
+                    printf("$L='Length of problem is %d km'", data);
+                    length=data;
+                }
+                else if ((data >= 11) && (data <= 15)) {
+                    printf("$L='Length of problem is %d km'", 12+(data-11)*2);
+                    length=12+(data-11)*2;
+                }
+                else if ((data >= 16) && (data <= 31)) {
+                    printf("$L='Length of problem is %d km'", 25+(data-16)*5);
+                    length = 25+(data-16)*5;
+                }
 			printf("\n");
 			break;
 		case 3: /* Speed limit */
@@ -570,8 +583,13 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 			break;
 		case 4: /* Additional quantifiers */
 		case 5: /* Additional quantifiers */
-			/** \todo apply to all preceding additional events */
-			printf("$Q='%s'\n", tmc_get_quantifier(msg->qnt, data));
+                /** \todo apply to all preceding additional events
+                 Some event descriptions have an additional quantifier, of which the type is specified in the Event list.
+                 Label 4 shall precede a 5-bit quantifier field and label 5 an 8-bit quantifier field. Which one is to be used
+                 depends on the event; see the Event List. */
+            quantifier=tmc_get_quantifier(msg->qnt, data);
+			printf("$Q='%s'\n", quantifier);
+                
 			break;
 		case 6: /* Supplementary information */
 			rds_oda_tmc_get_phrase(&t[0], sizeof(t), 'Z', data, 0);
@@ -616,42 +634,100 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 			tmc_print_location(msg->loc, &l4, msg->dir, 0);
 			printf("\n");
 			break;
-		case 13: /* Cross linkage to source of problem, on another route */
+        case 12: /* Precise Location Reference */
+                dist_hpl_ppl = data & 0x7FF; /* Bit 0-10 */
+                /*distance of hazard point location from pre-defined primary location (i.e. distance D1) with
+                          100 m resolution */
+                hla=(data>>8) & 0x18; /* hazard location accuracy: 0 better than 100m, 1 better than 500m, 2 better than 1km, 3 less than 1km */
+                hlr=(data>>8) & 0x20; /* hazard location reliablity 0=reliable, 1=approximate (confirmation desired)*/
+                hpd=(data>>8) & 0xC0; /* hazard point dynamics 0=static, 1=dynamic approaching, 2=reciding 3=unknown */
+                printf("dist_hpl_ppl=%im hla=%s hlr=%s hpd=%s", dist_hpl_ppl, hla==0?"<=100m":hla==1?"<=500m":hla==2?"<=1km":">1km", hlr==0?"reliable":"approximate", hpd==0?"static":hpd==1?"dynamic/approaching":hpd==2?"dynamic/receding":"dynamic/movement unknown");
+                printf("\n");
+            break;
+        case 13: /* Cross linkage to source of problem, on another route */
 			printf("cross_linkage=");
 			rds_oda_tmc_lcl_get_location(data, &l4);
 			tmc_print_location(msg->loc, &l4, msg->dir, 0);
-			printf("\n");
+//			printf("\n");
 			break;
 		case 14: /* Separator */
-			printf(",\n");
+			printf(", ");
 			diversion_nr = 0;
 			break;
-		default: /* 12,15 */
+        case 15: /* TODO: 15 Other information as defined by sub-labels */
+            break;
+		default:
 			/* Reserved for future use */
 			break;
 		}
+        
+        /* text */
+        rds_oda_tmc_get_phrase(&t[0], sizeof(t), 0, msg->evt, evt_qnt[0]);
+        
+        if(length) {
+            char* pos = strstr(&t[0], "(L)");
+            if(pos) {
+                char* newtext=malloc(strlen(t) + length/10+2);
+                if(pos-&t[0]>0)
+                    strncpy(newtext, &t[0], pos -&t[0]);
+                else
+                    newtext[0]='\0';
+                char test[100];
+                snprintf(test, snprintf(NULL, 0, "%ikm", length)+1, "%ikm", length);
+                strcat(newtext, test);
+                strcat(&newtext[strlen(newtext)], pos+3);
+                printf("%s", newtext);
+            }
+        }
+        
+        if(quantifier) {
+            char* pos = strstr(&t[0], "(Q)");
+            if(pos) {
+                char* newtext=malloc(strlen(t) + strlen(quantifier) + 2);
+                memset(newtext, 0, sizeof(strlen(t) + strlen(quantifier) + 2));
+                strncpy(newtext, &t[0], pos - &t[0]);
+                newtext[pos - &t[0]]='\0';
+                char test[100];
+                snprintf(test, snprintf(NULL, 0, "%s", quantifier)+1, "%s", quantifier);
+                strcat(newtext, test);
+                strcat(&newtext[strlen(newtext)], pos+3);
+                strncpy(t, newtext, sizeof(t));
+            }
+        }
+        
+        printf("%s\n", &t[0]);
+        
+//        printf("%s\n", &t[0]);
 	}
-
+    
+    
 	/* diversion advice */
 	if (msg->div) {
 		printf("%s", diversion_advice[msg->div]);
 		printf("\n");
 	}
+    
+    traff_create_from_tmc_message(msg);
+//    remove_traff_message(msg);
+    
 }
-
 
 static void tmc_print(rds_oda_tmc_message_t *_msg, uint8_t _action)
 {
+    printf("\n========================================\n");
 	switch(_action) {
 	case 0: /* new message */
+        printf("<new message>\n");
 		tmc_print_message(_msg);
 		break;
 	case 1: /* message updated (by timer or by reception) */
-		tmc_print_message(_msg);
+        printf("<message updated>\n");
+        tmc_print_message(_msg);
 		break;
 	default: /* problem cleared (by cancellation message) */
+        printf("<message cleared>\n");
 		tmc_print_message(_msg);
-		printf("<message cleared>\n");
+        remove_traff_message(_msg);
 		break;
 	}
 }
@@ -682,12 +758,14 @@ static void callback(rds_program_t *new, rds_program_t *old)
 			separator = 1;
 		}
 		ct_print();
+        ecc_print(); // If ECC is not being broadcast the default would never be printed
 	}
 }
 
 
 int main(int argc, char *argv[])
 {
+    
 	FILE *fd;
 	int opt;
 	int filter = 0;
@@ -709,7 +787,10 @@ int main(int argc, char *argv[])
 			if (strcmp(optarg, "smp") == 0) {
 				filter = 3;
 			} else
-				filter = -1;
+            if (strcmp(optarg, "dab") == 0) {
+                filter = 4;
+            } else
+                filter = -1;
 			break;
 		default: /* '?' */
 			usage = 1;
@@ -717,26 +798,33 @@ int main(int argc, char *argv[])
 	}
 
 	/* safety checks */
-	if ((filter == -1) || ((argc - optind) != 1))
+	if ((filter == -1) || (filter !=4 && (argc - optind) != 1))
 		usage = 1;
 	if (usage == 1) {
 		printf("Usage: %s [-f filter] filename\n", argv[0]);
 		return EXIT_FAILURE;
 	}
 
-	/* open file */
-	if (strcmp(argv[optind], "-") == 0) {
-		fd = stdin;
-	} else {
-		fd = fopen(argv[optind], "r");
-		if (fd <= 0) {
-			printf("Unable to open file %s\n", argv[optind]);
-			return EXIT_FAILURE;
-		}
-	}
-
+    if(filter != 4) {
+        /* open file */
+        if (strcmp(argv[optind], "-") == 0) {
+            fd = stdin;
+        } else {
+            fd = fopen(argv[optind], "r");
+            if (fd <= 0) {
+                printf("Unable to open file %s\n", argv[optind]);
+                return EXIT_FAILURE;
+            }
+        }
+    }
 	/* open database */
-	if (sqlite3_open("/usr/share/rds/tmc_el_en_CEN.db", &rds_oda_tmc_db_el) != 0) {
+    char filename[80];
+    
+    /* create database filename */
+    (void) snprintf(&filename[0], sizeof(filename), "%s/tmc_el_de_DE.db",
+                    /*@-unrecog@*/ SHAREDSTATEDIR /*@+unrecog@*/);
+    
+	if (sqlite3_open(&filename[0], &rds_oda_tmc_db_el) != 0) {
 		perror("unable to open EL database");
 		(void) sqlite3_close(rds_oda_tmc_db_el);
 		return EXIT_SUCCESS;
@@ -764,12 +852,17 @@ int main(int argc, char *argv[])
 		case 3:
 			retval = rds_decode_smp(fd);
 			break;
-		}
+        case 4:
+            retval = rds_decode_dab();
+            break;
+        }
 	} while (retval == EXIT_SUCCESS);
 
 	/* close file */
-	(void) fclose(fd);
-
+    if(filter != 4) {
+        (void) fclose(fd);
+    }
+    
 	/* save all RDS programs */
 	rds_program_save_all();
 
