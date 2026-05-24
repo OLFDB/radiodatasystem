@@ -115,7 +115,7 @@ static void rds_oda_irds_update_data_erase(void)
     {
         /* check for ROM Address */
         if ((irds_update_ram.ram_header_file[ptr + 0] == irds_update_data.pointer >> 8) &&
-                (irds_update_ram.ram_header_file[ptr + 1] == irds_update_data.pointer & 0xff))
+            (irds_update_ram.ram_header_file[ptr + 1] == (irds_update_data.pointer & 0xff)))
         {
             /* just reset RAM Data Pointers */
             irds_update_ram.ram_header_file[ptr + 2] = 0;
