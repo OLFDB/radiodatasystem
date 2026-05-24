@@ -1164,12 +1164,12 @@ void rds_program_save(rds_program_t *_rs)
     {
         if (wcslen(&_rs->oda_rtp[i][0]) > 0)
         {
-            (void) snprintf(&sql[i], sizeof(sql),
+            (void) snprintf(&sql[0], sizeof(sql),
                             "insert into ODA_RTP (PI,ECC,CT,RTP) "
-                            "values ('%4.4x','%2.2x',%u,'%ls')",
+                            "values ('%4.4x','%2.2x',%u,'%s')",
                             (unsigned int) _rs->pi,
                             (unsigned int) _rs->ecc,
-                            (unsigned int) _rs->oda_rtp_ct[i],
+                            (unsigned int) _rs->oda_rtp_ct[0],
                             (char *) &_rs->oda_rtp[i][0]);
 
             /* execute SQL */
