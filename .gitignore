@@ -26,3 +26,7 @@ Debug/
 *.gz
 configure*
 radiodatasystem.drawio
+.$radiodatasystem.drawio.bkp
+rdsdump
+rdstmc
+
