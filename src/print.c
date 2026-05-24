@@ -30,7 +30,7 @@
 #include <string.h>
 #include <time.h>
 #include <wchar.h>
-#include "rds.h"
+#include "../lib/rds.h"
 #include "../lib/pi.h"
 
 
@@ -187,7 +187,11 @@ void eon_tn_mf_print(void)
 
 void ert_print(void)
 {
-	printf("ERT: %ls\n", &rds_program_current->oda_ert[0]);
+    if(wcsstr(&rds_program_current->oda_ert[0], L"\U0000fffd")!=NULL) {
+        if(printf("ERT: %ls\n", &rds_program_current->oda_ert[0])<0) {
+            perror("printf");
+        }
+    }
 }
 
 void ih_print(uint8_t _ab, uint8_t _x, uint16_t _y, uint16_t _z)
@@ -213,17 +217,44 @@ void ms_print(void)
 
 void oda_print(uint8_t agtc, uint8_t agtv, uint16_t aid)
 {
+    char* aid_str = "";
+    switch (aid) {
+#ifdef ODA_TMC
+        case 0x0d45: /* RDS-TMC: ALERT-C / EN ISO 14819-1 (for testing use, only) */
+            aid_str="RDS-TMC: ALERT-C testing use only";
+            break;
+#endif
+        case 0x4bd7: /* RadioText+ / RT+ */
+            aid_str="RadioText+ / RT+";
+            break;
+        case 0x6552: /* Enhanced RadioText / eRT */
+            aid_str="Enhanced RadioText eRT";
+            break;
+#ifdef ODA_IRDS
+        case 0xc563: /* ID Logic */
+            aid_str="ID Logic";
+            break;
+#endif
+#ifdef ODA_TMC
+        case 0xcd46: /* RDS-TMC: ALERT-C / EN ISO 14819-1 (for service use, only) */
+        case 0xcd47: /* RDS-TMC: ALERT-C / EN ISO 14819-1 (for service use, only) */
+            aid_str="RDS-TMC: ALERT-C";
+            break;
+#endif
+        default:
+            aid_str="UNKNOWN AID";
+    }
 	if (aid == 0) {
-		printf("ODA: deallocation of agt=%i%c to aid=%4.4x\n",
-			agtc, agtv == 0 ? 'A' : 'B', aid);
+		printf("ODA: deallocation of agt=%i%c to aid=%4.4x -> %s\n",
+			agtc, agtv == 0 ? 'A' : 'B', aid, aid_str);
 	} else {
-		printf("ODA: allocation of agt=%i%c to aid=%4.4x\n",
-			agtc, agtv == 0 ? 'A' : 'B', aid);
+		printf("ODA: allocation of agt=%i%c to aid=%4.4x -> %s\n",
+			agtc, agtv == 0 ? 'A' : 'B', aid, aid_str);
 	}
 }
 
 /* country code */
-static unsigned char *pi_cc_str[16] = {
+static char *pi_cc_str[16] = {
 	"",
 	"Deutschland",
 	"",
@@ -242,7 +273,7 @@ static unsigned char *pi_cc_str[16] = {
 	""};
 
 /* programme in terms of area coverage */
-static unsigned char *pi_ac_str[16] = {
+static char *pi_ac_str[16] = {
 	"local",
 	"international",
 	"national",
@@ -261,7 +292,7 @@ static unsigned char *pi_ac_str[16] = {
 	"regional 12"};
 
 /* Germany: prn1 is federal land/state */
-static unsigned char *pi_prn1_str[16] = {
+static char *pi_prn1_str[16] = {
 	"Baden-Württemberg",
 	"Bayern",
 	"Berlin",
@@ -367,7 +398,12 @@ void pin_print(void)
 
 void ps_print(void)
 {
-	printf("PS: %ls\n", &rds_program_current->ps[0]);
+    if(wcsstr(&rds_program_current->ps[0], L"\U0000fffd")!=NULL) {
+        if(    printf("PS: %ls\n", &rds_program_current->ps[0])<0) {
+            perror("PS: printf");
+        }
+    }
+
 }
 
 void pty_print(void)
@@ -380,19 +416,33 @@ void pty_print(void)
 
 void ptyn_print(void)
 {
-	printf("PTYN: %ls\n", &rds_program_current->ptyn[0]);
+    if(wcsstr(&rds_program_current->ptyn[0], L"\U0000fffd")!=NULL) {
+        if(printf("PTYN: %ls\n", &rds_program_current->ptyn[0])<0) {
+            perror("PTYN: printf");
+        }
+    }
+	
 }
 
 void rt_print(void)
 {
-	printf("RT: %ls\n", &rds_program_current->rt[0]);
+    if(wcsstr(&rds_program_current->rt[0], L"\U0000fffd")!=NULL) {
+        if(printf("RT: %ls\n", &rds_program_current->rt[0])<0) {
+            perror("RT: printf");
+        }
+    }
 }
 
 void rtp_print(uint8_t rtp)
 {
 	char str[60];
 	rds_oda_rtp_get_class(&str[0], sizeof(str), rtp);
-	printf("RTP: %s='%ls'\n", &str[0], &rds_program_current->oda_rtp[rtp][0]);
+    if(wcsstr(&rds_program_current->oda_rtp[rtp][0], L"\U0000fffd")!=NULL) {
+        if(printf("RTP: %s='%ls'\n", &str[0], &rds_program_current->oda_rtp[rtp][0])<0) {
+            perror("RTP: printf");
+        }
+    }
+	
 }
 
 void tdc_print(uint8_t _addr, uint16_t _data)
