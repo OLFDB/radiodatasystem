@@ -1,9 +1,8 @@
 /**
- * \file rdstmc.c
- * \brief Dumps received RDS TMC data.
- * \author Tobias Lorenz <tobias.lorenz@gmx.net>
- *
- * This program dumps all received TMC data from a RDS stream.
+ * \file traff.c
+ * \brief Functions for handling and printing TraFF data.
+ * \author Olaf Brandt <olf@eisenzelt.de>
+ * 
  */
 
 #include <stdio.h>

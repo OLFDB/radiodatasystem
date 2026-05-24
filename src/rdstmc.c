@@ -789,6 +789,8 @@ int main(int argc, char *argv[])
 			} else
             if (strcmp(optarg, "dab") == 0) {
                 filter = 4;
+            } else if (strcmp(optarg, "spy") == 0) {
+                filter = 5;
             } else
                 filter = -1;
 			break;
@@ -854,6 +856,9 @@ int main(int argc, char *argv[])
 			break;
         case 4:
             retval = rds_decode_dab();
+            break;
+        case 5:
+            retval = rds_decode_spy(fd);
             break;
         }
 	} while (retval == EXIT_SUCCESS);
