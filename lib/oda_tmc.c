@@ -1848,7 +1848,7 @@ static void rds_oda_tmc_decode_multi_subsequent(uint8_t _ci, uint8_t _sgi, uint8
         uint8_t label = rds_program_current_private->oda_tmc_fifo >> (64-4);
         uint8_t data_length = tmc_optional_message_content_length[label];
 
-        if (rds_program_current_private->oda_tmc_fifo_cnt >= 4 + data_length)
+        if (data_length > 0 && (rds_program_current_private->oda_tmc_fifo_cnt >= 4 + data_length))
         {
             rds_oda_tmc_dsp_current->msg.opt[rds_oda_tmc_dsp_current->msg.opt_cnt].label = label;
             rds_program_current_private->oda_tmc_fifo <<= 4;    /* shift away label */
