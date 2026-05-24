@@ -767,7 +767,7 @@ rds_program_t *rds_program_load(uint8_t _ecc, uint16_t _pi)
             (void) sqlite3_prepare(rds_db_program, sql, (int) sizeof(sql), /*@-nullstate@*/ &stmt /*@+nullstate@*/, NULL);
 
             /* get results */
-            if (sqlite3_step(stmt) == SQLITE_ROW)
+            if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
             {
                 char af_str[512];
                 uint8_t af[2];
@@ -917,7 +917,7 @@ rds_program_t *rds_program_load(uint8_t _ecc, uint16_t _pi)
 
             /* get results */
             j = 0;
-            while ((j < rds_eon_li_max) && (sqlite3_step(stmt) == SQLITE_ROW))
+            while ((j < rds_eon_li_max) && (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW))
             {
                 row = 0;
                 /*@-mustfreefresh@*/
@@ -947,7 +947,7 @@ rds_program_t *rds_program_load(uint8_t _ecc, uint16_t _pi)
             (void) sqlite3_prepare(rds_db_program, sql, (int) sizeof(sql), /*@-nullstate@*/ &stmt /*@+nullstate@*/, NULL);
 
             /* get results */
-            while (sqlite3_step(stmt) == SQLITE_ROW)
+            while (stmt != NULL && (sqlite3_step(stmt) == SQLITE_ROW))
             {
                 unsigned int ct;
 
