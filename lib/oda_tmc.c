@@ -401,7 +401,7 @@ static int tmc_db_lcl_open(void)
 
     (void) snprintf(&filename[0], sizeof(filename), "%s/tmc_lcl_%2.2X_%1.1X_%2.2X.db",
                     /*@-unrecog@*/ DATADIR /*@+unrecog@*/,
-                    (unsigned short int) rds_program_current->ecc,
+                    (unsigned short int) 0xE0,//rds_program_current->ecc, TODO: Why ECC is not correct?
                     (unsigned short int) rds_pi_cc(rds_program_current->pi),
                     (unsigned short int) rds_oda_tmc_dsp_current->ltn);
 
@@ -463,7 +463,7 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
         return;
 
     /* preset identical values from columns CID, TABCD and LCD */
-    _l->cid = rds_program_current->oda_tmc_cid;
+    _l->cid = 58; //rds_program_current->oda_tmc_cid;
     _l->tabcd = rds_oda_tmc_dsp_current->ltn;
     _l->lcd = _lcd;
 
