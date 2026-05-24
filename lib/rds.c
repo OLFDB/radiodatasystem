@@ -939,7 +939,7 @@ rds_program_t *rds_program_load(uint8_t _ecc, uint16_t _pi)
             /* prepare SQL */
             (void) snprintf(&sql[0], sizeof(sql),
                             "select CT,RTP"
-                            "from ODA_RTP where lower(ECC)='%2.2x' and lower(PI)='%4.4x'",
+                            " from ODA_RTP where lower(ECC)='%2.2x' and lower(PI)='%4.4x'",
                             (unsigned int) rds_program[i].public.ecc,
                             (unsigned int) rds_program[i].public.pi);
             stmt = NULL;
@@ -986,7 +986,7 @@ rds_program_t *rds_program_load(uint8_t _ecc, uint16_t _pi)
  */
 void rds_program_save(rds_program_t *_rs)
 {
-    char sql[500];
+    char sql[2048];
     sqlite3_stmt *stmt = NULL;
     uint16_t i, j;
     char af_str[512];
@@ -1053,16 +1053,15 @@ void rds_program_save(rds_program_t *_rs)
                     ",ODA_TMC_CID,ODA_TMC_LID,ODA_TMC_SID"
 #endif
                     ") values ("
-                    "'%4.4x','%ls',%u,%u,'%s',%u"
+                    "'%4.4x','%s',%u,%u,'%s',%u"
                     ",%u,%u,%u,%u,%u"
                     ",'%2.2u:%2.2u:%2.2u','%2.2x','%s',%u,%u,%u"
-                    ",'%ls'"
-                    ",'%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x"
-                    ",%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x'"
-                    ",'%s','%ls'"
+                    ",'%s'"
+                    ",'%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x,%4.4x'"
+                    ",'%s','%s'"
                     ",'%u>%u,%u>%u,%u>%u,%u>%u,%u>%u'"
                     ",%u,%u,%u,%u,%u,%u,%u"
-                    ",'%ls'"
+                    ",'%s'"
 #ifdef ODA_TMC
                     ",%u,%u,%u"
 #endif
@@ -1094,7 +1093,7 @@ void rds_program_save(rds_program_t *_rs)
                     (unsigned int) _rs->eon_mf[3].tn, (unsigned int) _rs->eon_mf[3].mf,
                     (unsigned int) _rs->eon_mf[4].tn, (unsigned int) _rs->eon_mf[4].mf,
                     (unsigned int) _rs->oda_rtp_cb, (unsigned int) _rs->oda_rtp_scb, (unsigned int) _rs->oda_rtp_tn, (unsigned int) _rs->oda_rtp_itb, (unsigned int) _rs->oda_rtp_irb, (unsigned int) _rs->oda_rtp_ct[0], (unsigned int) _rs->oda_rtp_ct[1],
-                    (char *) _rs->oda_ert
+                    (wcsstr(_rs->oda_ert, L"\U0000fffd")!=NULL)?_rs->oda_ert:(wchar_t *)"" // TODO: Fix enhanced radio text
 #ifdef ODA_TMC
                     , (unsigned int) _rs->oda_tmc_cid, (unsigned int) _rs->oda_tmc_lid, (unsigned int) _rs->oda_tmc_sid
 #endif
