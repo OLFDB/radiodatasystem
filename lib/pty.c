@@ -92,10 +92,10 @@ void rds_pty_get_str(char *_str, size_t _display_length, uint8_t _pty, uint8_t _
     (void) sqlite3_prepare(rds_db_lang, sql, (int) sizeof(sql), /*@-nullstate@*/ &stmt /*@+nullstate@*/, NULL);
 
     /* evaluate SQL results */
-    if (sqlite3_step(stmt) == SQLITE_ROW)
+    if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
     {
         /*@+ignoresigns@ @-mustfreefresh@*/
-        (void) strncpy(_str, sqlite3_column_text(stmt, 0), _display_length);
+        (void) strncpy(_str, (const char *)sqlite3_column_text(stmt, 0), _display_length);
         /*@-ignoresigns@ @+mustfreefresh@*/
     }
     else
