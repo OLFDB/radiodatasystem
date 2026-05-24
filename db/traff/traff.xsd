@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="https://gitlab.com/traffxml"
+           xmlns="https://gitlab.com/traffxml"
+           elementFormDefault="qualified">
+           
+  <xs:complexType name="FeedType">
+    <xs:sequence>
+    	<xs:element ref="message" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="feed" type="FeedType"/>
+  <xs:element name="response">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="feed" type="FeedType" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+    <xs:element name="replaces">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="id" use="required"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="supplementary_info">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="class" use="required"/>
+          <xs:attribute type="xs:string" name="q_dimension"/>
+          <xs:attribute type="xs:string" name="q_duration"/>
+          <xs:attribute type="xs:string" name="q_int"/>
+          <xs:attribute type="xs:string" name="q_ints"/>
+          <xs:attribute type="xs:string" name="q_speed"/>
+          <xs:attribute type="xs:string" name="q_temperature"/>
+          <xs:attribute type="xs:string" name="q_time"/>
+          <xs:attribute type="xs:string" name="q_weight"/>
+          <xs:attribute type="xs:string" name="type" use="required"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="event">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="supplementary_info"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="class" use="required"/>
+      <xs:attribute type="xs:int" name="length" use="optional"/>
+      <xs:attribute type="xs:int" name="probability" use="optional"/>
+      <xs:attribute type="xs:string" name="q_dimension"/>
+      <xs:attribute type="xs:string" name="q_duration"/>
+      <xs:attribute type="xs:string" name="q_int"/>
+      <xs:attribute type="xs:string" name="q_ints"/>
+      <xs:attribute type="xs:string" name="q_speed"/>
+      <xs:attribute type="xs:string" name="q_temperature"/>
+      <xs:attribute type="xs:string" name="q_time"/>
+      <xs:attribute type="xs:string" name="q_weight"/>
+      <xs:attribute type="xs:int" name="speed" use="optional"/>
+      <xs:attribute type="xs:string" name="type" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="from">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:float" name="distance"/>
+          <xs:attribute type="xs:string" name="junction_name"/>
+          <xs:attribute type="xs:string" name="junction_ref"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="to">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:float" name="distance"/>
+          <xs:attribute type="xs:string" name="junction_name"/>
+          <xs:attribute type="xs:string" name="junction_ref"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="at">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:float" name="distance"/>
+          <xs:attribute type="xs:string" name="junction_name"/>
+          <xs:attribute type="xs:string" name="junction_ref"/>
+          <xs:attribute type="xs:string" name="radius"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="via">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:float" name="distance"/>
+          <xs:attribute type="xs:string" name="junction_name"/>
+          <xs:attribute type="xs:string" name="junction_ref"/>
+          <xs:attribute type="xs:string" name="radius"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="not_via">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:float" name="distance"/>
+          <xs:attribute type="xs:string" name="junction_name"/>
+          <xs:attribute type="xs:string" name="junction_ref"/>
+          <xs:attribute type="xs:string" name="radius"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="polyline" type="xs:string"/>
+  <xs:element name="merge">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="replaces"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="events">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="event" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="location">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="from"/>
+        <xs:element ref="to"/>
+        <xs:element ref="at"/>
+        <xs:element ref="via"/>
+        <xs:element ref="not_via"/>
+        <xs:element ref="polyline"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="country" use="optional"/>
+      <xs:attribute type="xs:string" name="destination" use="optional"/>
+      <xs:attribute type="xs:string" name="direction" use="optional"/>
+      <xs:attribute type="xs:string" name="directionality" use="optional"/>
+      <xs:attribute type="fuzziness" name="fuzziness" use="optional"/>
+      <xs:attribute type="xs:string" name="origin"/>
+      <xs:attribute type="xs:string" name="ramps"/>
+      <xs:attribute type="xs:string" name="road_class"/>
+      <xs:attribute type="xs:boolean" name="road_is_urban"/>
+      <xs:attribute type="xs:string" name="road_name"/>
+      <xs:attribute type="xs:string" name="road_ref"/>
+      <xs:attribute type="xs:string" name="territory"/>
+      <xs:attribute type="xs:string" name="town"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="message">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="merge" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="events" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="location" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+      <xs:attribute type="xs:boolean" name="cancellation" use="optional"/>
+      <xs:attribute type="xs:string" name="end_time" use="optional"/>
+      <xs:attribute type="xs:string" name="expiration_time" use="optional"/>
+      <xs:attribute type="xs:boolean" name="forecast" use="optional"/>
+      <xs:attribute type="xs:string" name="id" use="required"/>
+      <xs:attribute type="xs:string" name="receive_time" use="required"/>
+      <xs:attribute type="xs:string" name="start_time" use="optional"/>
+      <xs:attribute type="xs:string" name="update_time" use="required"/>
+      <xs:attribute type="xs:string" name="urgency" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+    <xs:simpleType name="fuzziness">
+  <xs:restriction base="xs:string">
+    <xs:enumeration value="LOW_RES"/>
+    <xs:enumeration value="MEDIUM_RES"/>
+    <xs:enumeration value="END_UNKNOWN"/>
+    <xs:enumeration value="START_UNKNOWN"/>
+    <xs:enumeration value="EXTENT_UNKNOWN"/>
+  </xs:restriction>
+</xs:simpleType>
+<xs:element name="fuzziness" type="fuzziness"/>
+</xs:schema>
