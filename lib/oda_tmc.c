@@ -486,6 +486,7 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
     /* 13: AdministrativeAreas */
     if (_l->tclass == (char) 0)
     {
+//        memset(sql, 0, sizeof(sql));
         (void) snprintf(sql, sizeof(sql), "select CLASS,TCD,STCD,NID,POL_LCD from ADMINISTRATIVEAREA where CID=%hu and TABCD=%hu and LCD=%hu",
                         (unsigned short int) _l->cid,
                         (unsigned short int) _l->tabcd,
