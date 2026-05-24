@@ -187,14 +187,14 @@ static int tmc_db_el_open(void)
         (void) snprintf(sql, sizeof(sql), "select CODE,N,Q,T,D,U,C from EL");
         /*@-nullpass@*/
         (void) sqlite3_prepare(rds_oda_tmc_db_el, sql, (int) sizeof(sql), /*@-nullstate@*/ &stmt /*@+nullstate@*/, NULL);
-        while (sqlite3_step(stmt) == SQLITE_ROW)
+        while (stmt != NULL && (sqlite3_step(stmt) == SQLITE_ROW))
         {
             code = (uint16_t) sqlite3_column_int(stmt, 0);
             e = &rds_oda_tmc_event_list[code];
 
             /* N(ature): ''=Info 'F'=Forecast 'S'=Silent */
             /*@+ignoresigns@ @-mustfreefresh@*/
-            (void) strncpy(&e->n, sqlite3_column_text(stmt, 1), 1);
+            (void) strncpy(&e->n, (const char *)sqlite3_column_text(stmt, 1), 1);
             /*@-ignoresigns@ @+mustfreefresh@*/
             if ((e->n != 'F') && (e->n != 'S'))
                 e->n = 'I';
@@ -204,7 +204,7 @@ static int tmc_db_el_open(void)
 
             /* (Duration) T(ype): 'D'=Dynamic 'L'=Longer-lasting '(D)' '(L)' */
             /*@+ignoresigns@ @-mustfreefresh@*/
-            (void) strncpy(&s[0], sqlite3_column_text(stmt, 3), sizeof(s));
+            (void) strncpy(&s[0], (const char *)sqlite3_column_text(stmt, 3), sizeof(s));
             /*@-ignoresigns@ @+mustfreefresh@*/
             if (strcmp(&s[0], "D") == 0)
             {
@@ -228,7 +228,7 @@ static int tmc_db_el_open(void)
 
             /* U(rgency): ' ' 'U' 'X' */
             /*@+ignoresigns@ @-mustfreefresh@*/
-            (void) strncpy(&e->u, sqlite3_column_text(stmt, 5), 1);
+            (void) strncpy(&e->u, (const char *)sqlite3_column_text(stmt, 5), 1);
             /*@-ignoresigns@ @+mustfreefresh@*/
             if ((e->u != 'U') && (e->u != 'X'))
                 e->u = 'N';
@@ -241,14 +241,14 @@ static int tmc_db_el_open(void)
         /* read in all language-independent constants from Forecast Event List */
         (void) snprintf(sql, sizeof(sql), "select CODE,N,Q,T,D,U,C from FEL");
         (void) sqlite3_prepare(rds_oda_tmc_db_el, sql, (int) sizeof(sql), /*@-nullstate@*/ &stmt /*@+nullstate@*/, NULL);
-        while (sqlite3_step(stmt) == SQLITE_ROW)
+        while (stmt != NULL && (sqlite3_step(stmt) == SQLITE_ROW))
         {
             code = (uint16_t) sqlite3_column_int(stmt, 0);
             e = &rds_oda_tmc_event_list[code];
 
             /* N(ature): ''=Info 'F'=Forecast 'S'=Silent */
             /*@+ignoresigns@ @-mustfreefresh@*/
-            (void) strncpy(&e->n, sqlite3_column_text(stmt, 1), 1);
+            (void) strncpy(&e->n, (const char *)sqlite3_column_text(stmt, 1), 1);
             /*@-ignoresigns@ @+mustfreefresh@*/
             if ((e->n != 'F') && (e->n != 'S'))
                 e->n = 'I';
@@ -258,7 +258,7 @@ static int tmc_db_el_open(void)
 
             /* (Duration) T(ype): 'D'=Dynamic 'L'=Longer-lasting '(D)' '(L)' */
             /*@+ignoresigns@ @-mustfreefresh@*/
-            (void) strncpy(s, sqlite3_column_text(stmt, 3), sizeof(s));
+            (void) strncpy(s, (const char *)sqlite3_column_text(stmt, 3), sizeof(s));
             /*@-ignoresigns@ @+mustfreefresh@*/
             if (strcmp(s, "D") == 0)
             {
@@ -282,7 +282,7 @@ static int tmc_db_el_open(void)
 
             /* U(rgency): ' ' 'U' 'X' */
             /*@+ignoresigns@ @-mustfreefresh@*/
-            (void) strncpy(&e->u, sqlite3_column_text(stmt, 5), 1);
+            (void) strncpy(&e->u, (const char *)sqlite3_column_text(stmt, 5), 1);
             /*@-ignoresigns@ @+mustfreefresh@*/
             if ((e->u != 'U') && (e->u != 'X'))
                 e->u = 'N';
@@ -347,28 +347,28 @@ void rds_oda_tmc_get_phrase(char *_str, size_t _size, char _l, uint16_t _n, uint
     (void) sqlite3_prepare(rds_oda_tmc_db_el, sql, (int) sizeof(sql), /*@-nullstate@*/ &stmt /*@-nullstate@*/, NULL);
 
     /* retrieve SQL sentence */
-    if (sqlite3_step(stmt) == SQLITE_ROW)
+    if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
     {
         /*@+ignoresigns@ @-mustfreefresh@*/
         switch(_q)
         {
         case 0:
             /* specific TEXT_Q0 */
-            (void) strncpy(_str, sqlite3_column_text(stmt, 1), _size);
+            (void) strncpy(_str, (const char *)sqlite3_column_text(stmt, 1), _size);
             break;
         case 1:
             /* specific TEXT_Q1 */
-            (void) strncpy(_str, sqlite3_column_text(stmt, 2), _size);
+            (void) strncpy(_str, (const char *)sqlite3_column_text(stmt, 2), _size);
             break;
         default:
             /* specific TEXT_QN */
-            (void) strncpy(_str, sqlite3_column_text(stmt, 3), _size);
+            (void) strncpy(_str, (const char *)sqlite3_column_text(stmt, 3), _size);
             break;
         }
 
         /* fallback to default TEXT */
         if (strlen(_str) == 0)
-            (void) strncpy(_str, sqlite3_column_text(stmt, 0), _size);
+            (void) strncpy(_str, (const char *)sqlite3_column_text(stmt, 0), _size);
         /*@-ignoresigns@ @+mustfreefresh@*/
     }
 
@@ -429,7 +429,7 @@ static int tmc_db_lcl_open(void)
             printf("Not found CID: %u -- %s\n %i",(unsigned short int) rds_program_current->oda_tmc_cid, sql, sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL));
         }
         /* retrieve SQL sentence */
-        if (sqlite3_step(stmt) == SQLITE_ROW)
+        if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
         {
             rds_program_current->oda_tmc_lid = (uint8_t) sqlite3_column_int(stmt, 0);
         }
@@ -488,7 +488,10 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
                         (unsigned short int) _l->lcd);
         /*@-nullpass@*/
         (void) sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL);
-        if (sqlite3_step(stmt) == SQLITE_ROW)
+        if(stmt == NULL) {
+            printf("%s\n %i", sql, sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL));
+        }
+        if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
         {
             /*@+ignoresigns@ @-mustfreefresh@*/
             strncpy(&_l->tclass, sqlite3_column_text(stmt, 0), 1);
@@ -511,10 +514,13 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
                         (unsigned short int) _l->lcd);
         /*@-nullpass@*/
         (void) sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL);
-        if (sqlite3_step(stmt) == SQLITE_ROW)
+        if(stmt == NULL) {
+            printf("%s\n %i", sql, sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL));
+        }
+        if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
         {
             /*@+ignoresigns@ @-mustfreefresh@*/
-            strncpy(&_l->tclass, sqlite3_column_text(stmt, 0), 1);
+            strncpy(&_l->tclass, (const char *)sqlite3_column_text(stmt, 0), 1);
             /*@-ignoresigns@ @+mustfreefresh@*/
             _l->tcd = (uint16_t) sqlite3_column_int(stmt, 1);
             _l->stcd = (uint16_t) sqlite3_column_int(stmt, 2);
@@ -534,7 +540,10 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
                         (unsigned short int) _l->lcd);
         /*@-nullpass@*/
         (void) sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL);
-        if (sqlite3_step(stmt) == SQLITE_ROW)
+        if(stmt == NULL) {
+            printf("%s\n %i", sql, sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL));
+        }
+        if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
         {
             /*@+ignoresigns@ @-mustfreefresh@*/
             strncpy(&_l->tclass, sqlite3_column_text(stmt, 0), 1);
@@ -568,12 +577,12 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
         if (sqlite3_step(stmt) == SQLITE_ROW)
         {
             /*@+ignoresigns@ @-mustfreefresh@*/
-            strncpy(&_l->tclass, sqlite3_column_text(stmt, 0), 1);
+            strncpy(&_l->tclass, (const char *)sqlite3_column_text(stmt, 0), 1);
             /*@-ignoresigns@ @+mustfreefresh@*/
             _l->tcd = (uint16_t) sqlite3_column_int(stmt, 1);
             _l->stcd = (uint16_t) sqlite3_column_int(stmt, 2);
             /*@+ignoresigns@ @-mustfreefresh@*/
-            strncpy(&_l->roadnumber[0], sqlite3_column_text(stmt, 3), 11);
+            strncpy(&_l->roadnumber[0], (const char *)sqlite3_column_text(stmt, 3), 11);
             /*@-ignoresigns@ @+mustfreefresh@*/
             _l->rnid = (uint16_t) sqlite3_column_int(stmt, 4);
             _l->n1id = (uint16_t) sqlite3_column_int(stmt, 5);
@@ -595,7 +604,10 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
                         (unsigned short int) _l->lcd);
         /*@-nullpass@*/
         (void) sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL);
-        if (sqlite3_step(stmt) == SQLITE_ROW)
+        if(stmt == NULL) {
+            printf("%s\n %i", sql, sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL));
+        }
+        if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
         {
             _l->neg_off_lcd = (uint16_t) sqlite3_column_int(stmt, 0);
             _l->pos_off_lcd = (uint16_t) sqlite3_column_int(stmt, 1);
@@ -615,15 +627,18 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
                         (unsigned short int) _l->lcd);
         /*@-nullpass@*/
         (void) sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL);
-        if (sqlite3_step(stmt) == SQLITE_ROW)
+        if(stmt == NULL) {
+            printf("%s\n %i", sql, sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL));
+        }
+        if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
         {
             /*@+ignoresigns@ @-mustfreefresh@*/
-            strncpy(&_l->tclass, sqlite3_column_text(stmt, 0), 1);
+            strncpy(&_l->tclass, (const char *)sqlite3_column_text(stmt, 0), 1);
             /*@-ignoresigns@ @+mustfreefresh@*/
             _l->tcd = (uint16_t) sqlite3_column_int(stmt, 1);
             _l->stcd = (uint16_t) sqlite3_column_int(stmt, 2);
             /*@+ignoresigns@ @-mustfreefresh@*/
-            strncpy(&_l->junctionnumber[0], sqlite3_column_text(stmt, 3), 11);
+            strncpy(&_l->junctionnumber[0], (const char *)sqlite3_column_text(stmt, 3), 11);
             /*@-ignoresigns@ @+mustfreefresh@*/
             _l->rnid = (uint16_t) sqlite3_column_int(stmt, 4);
             _l->n1id = (uint16_t) sqlite3_column_int(stmt, 5);
@@ -639,10 +654,10 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
             _l->presentpos = (uint8_t) sqlite3_column_int(stmt, 15);
             _l->presentneg = (uint8_t) sqlite3_column_int(stmt, 16);
             /*@+ignoresigns@ @-mustfreefresh@*/
-            strncpy(&_l->diversionpos[0], sqlite3_column_text(stmt, 17), 11);
-            strncpy(&_l->diversionneg[0], sqlite3_column_text(stmt, 18), 11);
-            strncpy(&_l->xcoord[0], sqlite3_column_text(stmt, 19), 10);
-            strncpy(&_l->ycoord[0], sqlite3_column_text(stmt, 20), 9);
+            strncpy(&_l->diversionpos[0], (const char *)sqlite3_column_text(stmt, 17), 11);
+            strncpy(&_l->diversionneg[0], (const char *)sqlite3_column_text(stmt, 18), 11);
+            strncpy(&_l->xcoord[0], (const char *)sqlite3_column_text(stmt, 19), 10);
+            strncpy(&_l->ycoord[0], (const char *)sqlite3_column_text(stmt, 20), 9);
             /*@-ignoresigns@ @+mustfreefresh@*/
             _l->interruptsroad = (uint8_t) sqlite3_column_int(stmt, 21);
             _l->urban = (uint8_t) sqlite3_column_int(stmt, 22);
@@ -660,7 +675,10 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
                         (unsigned short int) _l->lcd);
         /*@-nullpass@*/
         (void) sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL);
-        if (sqlite3_step(stmt) == SQLITE_ROW)
+        if(stmt == NULL) {
+            printf("%s\n %i", sql, sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL));
+        }
+        if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
         {
             _l->neg_off_lcd = (uint16_t) sqlite3_column_int(stmt, 0);
             _l->pos_off_lcd = (uint16_t) sqlite3_column_int(stmt, 1);
@@ -703,10 +721,10 @@ void rds_oda_tmc_lcl_get_name(char *_str, size_t _size, uint16_t _nid)
     (void) sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL);
 
     /* execute SQL */
-    if (sqlite3_step(stmt) == SQLITE_ROW)
+    if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
     {
         /*@+ignoresigns@ @-mustfreefresh@*/
-        (void) strncpy(_str, sqlite3_column_text(stmt, 0), _size);
+        (void) strncpy(_str, (const char *)sqlite3_column_text(stmt, 0), _size);
         /*@-ignoresigns@ @+mustfreefresh@*/
     }
     (void) sqlite3_finalize(stmt);
@@ -750,10 +768,10 @@ void rds_oda_tmc_lcl_get_type_name(char *_str, size_t _size, char _tclass, uint8
     /*@-nullpass@*/
     (void) sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL);
 
-    if (sqlite3_step(stmt) == SQLITE_ROW)
+    if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
     {
         /*@+ignoresigns@ @-mustfreefresh@*/
-        (void) strncpy(_str, sqlite3_column_text(stmt, 2), _size);
+        (void) strncpy(_str, (const char *)sqlite3_column_text(stmt, 2), _size);
         /*@-ignoresigns@ @+mustfreefresh@*/
     }
 
