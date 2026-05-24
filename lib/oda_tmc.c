@@ -374,6 +374,7 @@ void rds_oda_tmc_get_phrase(char *_str, size_t _size, char _l, uint16_t _n, uint
 
     (void) sqlite3_finalize(stmt);
     /*@+nullpass@*/
+    convert_rds_charset_to_ascii(_str);
 }
 
 
@@ -729,6 +730,7 @@ void rds_oda_tmc_lcl_get_name(char *_str, size_t _size, uint16_t _nid)
     }
     (void) sqlite3_finalize(stmt);
     /*@+nullpass@*/
+    convert_rds_charset_to_ascii(_str);
 }
 
 
@@ -777,6 +779,7 @@ void rds_oda_tmc_lcl_get_type_name(char *_str, size_t _size, char _tclass, uint8
 
     (void) sqlite3_finalize(stmt);
     /*@+nullpass@*/
+    convert_rds_charset_to_ascii(_str);
 }
 
 
@@ -2130,4 +2133,77 @@ void rds_oda_tmc_decode_assign(uint16_t _msg)
         /* nothing is documented for the variant codes 2 and 3 */
         rds_decode_status = RDS_DECODE_STATUS_NOT_ASSIGNED;
     }
+}
+
+char * stringReplace(char *search, char *replace, char *string) {
+    char *tempString, *searchStart;
+    long len=0;
+    
+    
+    // preuefe ob Such-String vorhanden ist
+    searchStart = strstr(string, search);
+    if(searchStart == NULL) {
+        return string;
+    }
+    
+    // Speicher reservieren
+    tempString = (char*) malloc(strlen(string) * sizeof(wchar_t));
+    if(tempString == NULL) {
+        return NULL;
+    }
+    
+    // temporaere Kopie anlegen
+    strcpy(tempString, string);
+    
+    // ersten Abschnitt in String setzen
+    len = searchStart - string;
+    string[len] = '\0';
+    
+    // zweiten Abschnitt anhaengen
+    strcat(string, replace);
+    
+    // dritten Abschnitt anhaengen
+    len += strlen(search);
+    strcat(string, (char*)tempString+len);
+    
+    // Speicher freigeben
+    free(tempString);
+    
+    return string;
+}
+
+void  convert_rds_charset_to_ascii(char* str) {
+    
+//    RDSCharset.decodermapping.put (Character.valueOf((char) 0x04),  Character.valueOf((char) 0x20)); // SPACE
+//    RDSCharset.decodermapping.put (Character.valueOf((char) 0x91),  Character.valueOf((char) 0xE4)); // ä
+//    RDSCharset.decodermapping.put (Character.valueOf((char) 0x97),  Character.valueOf((char) 0xF6)); // ö
+//    RDSCharset.decodermapping.put (Character.valueOf((char) 0x99),  Character.valueOf((char) 0xFC)); // ü
+//    RDSCharset.decodermapping.put (Character.valueOf((char) 0x8D),  Character.valueOf((char) 0xCF)); // ß
+//    RDSCharset.decodermapping.put (Character.valueOf((char) 0xD1),  Character.valueOf((char) 0xC4)); // Ä
+//    RDSCharset.decodermapping.put (Character.valueOf((char) 0xD7),  Character.valueOf((char) 0xD6)); // Ö
+//    RDSCharset.decodermapping.put (Character.valueOf((char) 0xD9),  Character.valueOf((char) 0xDC)); // Ü
+
+    // {{0x9f, 0xE1},{0x04, 0x20}, {0x91, 0xE4}, {0x97, 0xF6}, {0x99, 0xFC}, {0x8D, 0xCF}, {0xD1, 0xC4}, {0xD7, 0xD6}, {0xD9, 0xDC}};
+    
+
+        
+    unsigned char *src = (unsigned char*)str;
+    unsigned char *dst = (unsigned char*)str;
+    
+    while (*src) {
+        if (*src == 0xC3 && *(src + 1) >= 0x80) {
+            // Konvertierungsschema: (Byte1 & 0x03) << 6 | (Byte2 & 0x3F)
+            // Speziell für den C3-Block: Ergebnis = zweites Byte + 0x40
+            *dst++ = *(src + 1) + 0x40;
+            src += 2;
+        } else if (*src == 0xC2 && *(src + 1) >= 0x80) {
+            // Für den C2-Block (z.B. ©, ®): Ergebnis = zweites Byte
+            *dst++ = *(src + 1);
+            src += 2;
+        } else {
+            *dst++ = *src++;
+        }
+    }
+    *dst = '\0';
+    str=str;
 }
