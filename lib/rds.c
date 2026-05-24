@@ -152,7 +152,7 @@ rds_decode_status_t rds_decode_status = RDS_DECODE_STATUS_OK;
 /*@-mustfreefresh@@-mustfreeonly@*/
 void rds_decode(uint16_t _pi, uint16_t _blk2, uint16_t _blk3, uint16_t _blk4)
 {
-    uint8_t ecc = 0;
+    uint8_t ecc = 0xE0; // TODO: Check decoder
     uint8_t gtc;    /* Group Type Code */
     uint8_t gtv;    /* Group Type Version: 0=A 1=B */
     static rds_program_t rds_program_current_old;
@@ -590,7 +590,7 @@ int rds_db_lang_open(/*@null@*/ char *_lang)
         {
             /* use default database */
             (void) snprintf(&filename[0], sizeof(filename),
-                            DATADIR "/rds_lang_en_CEN.db");
+                            DATADIR "/rds_lang_de_DE.db");
         }
     }
     else
