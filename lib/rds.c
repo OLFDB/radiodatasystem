@@ -770,8 +770,8 @@ rds_program_t *rds_program_load(uint8_t _ecc, uint16_t _pi)
             if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
             {
                 char af_str[512];
-                uint8_t af[2];
-                char ct_str[25];
+                uint8_t af[sizeof(unsigned int) * 2]; // Stack buffer overflow using array size 2 here
+                char ct_str[26];
                 struct tm tm;
                 row = 0;
                 wcsncpy(&rds_program[i].public.ps[0],
