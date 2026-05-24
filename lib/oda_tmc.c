@@ -146,7 +146,7 @@ void (*rds_oda_tmc_callback)(rds_oda_tmc_message_t *_msg, uint8_t _action);
 static int tmc_db_el_open(void)
 {
     char sql[] = "select CODE,N,Q,T,D,U,C from ___";
-    char s[3];
+    char s[4];
     char filename[80];
     sqlite3_stmt *stmt = NULL;
     rds_oda_tmc_event_list_entry_t *e;
@@ -168,17 +168,18 @@ static int tmc_db_el_open(void)
     {
         strncpy(&tmc_db_el_filename[0], &filename[0], sizeof(tmc_db_el_filename));
 
-#if 0
+
         /* close database if necessary */
         if (rds_oda_tmc_db_el != NULL)
             (void) sqlite3_close(rds_oda_tmc_db_el);
-#endif
+
 
         /* open database */
         if (sqlite3_open(&tmc_db_el_filename[0], /*@-nullstate@*/ &rds_oda_tmc_db_el /*@+nullstate@*/) != 0)
         {
             if (rds_oda_tmc_db_el != NULL)
                 (void) sqlite3_close(rds_oda_tmc_db_el);
+            printf("Failed to open eventlist db\n");
             return EXIT_FAILURE;
         }
 
@@ -421,10 +422,12 @@ static int tmc_db_lcl_open(void)
         }
 
         /* read language ID */
-        (void) snprintf(&sql[0], sizeof(sql), "select LID from LANGUAGES where CID=%hu",
-                        (unsigned short int) rds_program_current->oda_tmc_cid);
+        (void) snprintf(&sql[0], sizeof(sql), "select LID from LANGUAGES where CID=%hu", 58);
+           //             (unsigned short int) rds_program_current->oda_tmc_cid);
         (void) sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL);
-
+        if(stmt == NULL) {
+            printf("Not found CID: %u -- %s\n %i",(unsigned short int) rds_program_current->oda_tmc_cid, sql, sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL));
+        }
         /* retrieve SQL sentence */
         if (sqlite3_step(stmt) == SQLITE_ROW)
         {
