@@ -48,8 +48,8 @@ static void callback(rds_program_t *new, rds_program_t *old)
 	/* only report for current program, not EON programs */
 	if (rds_program_current != new)
 		return;
-//	if (memcmp(&new->af.af, &old->af.af, new->af.af[0][0] - 224 + 1) != 0)
-//		af_print();
+	if (memcmp(&new->af, &old->af, 50) != 0)
+		af_print();
 	if (memcmp(&new->ct, &old->ct, sizeof(new->ct)) != 0)
 		ct_print();
 	if (new->di_st != old->di_st)
@@ -100,6 +100,8 @@ static void callback(rds_program_t *new, rds_program_t *old)
 
 	if (rds_decode_status != 0)
 		printf("RDS decode status: %i\n", rds_decode_status);
+    
+    rt_print();
 }
 
 
@@ -112,21 +114,22 @@ int main(int argc, char *argv[])
 	int retval = 0;
 
 	while ((opt = getopt(argc, argv, "f:")) != -1) {
-		switch (opt) {
-		case 'f':
-			if (strcmp(optarg, "v4l") == 0) {
-				filter = 0;
-			} else
-			if (strcmp(optarg, "raw") == 0) {
-				filter = 1;
-			} else
-			if (strcmp(optarg, "csv") == 0) {
-				filter = 2;
-			} else
-			if (strcmp(optarg, "smp") == 0) {
-				filter = 3;
-			} else
-				filter = -1;
+        switch (opt) {
+            case 'f':
+                if (strcmp(optarg, "v4l") == 0) {
+                    filter = 0;
+                } else if (strcmp(optarg, "raw") == 0) {
+                        filter = 1;
+                } else if (strcmp(optarg, "csv") == 0) {
+                            filter = 2;
+                } else if (strcmp(optarg, "smp") == 0) {
+                      filter = 3;
+                } else if (strcmp(optarg, "dab") == 0) {
+                      filter = 4;
+                } else if (strcmp(optarg, "spy") == 0) {
+                      filter = 5;
+                } else
+                    filter = -1;
 			break;
 		default: /* '?' */
 			usage = 1;
@@ -134,7 +137,7 @@ int main(int argc, char *argv[])
 	}
 
 	/* safety checks */
-	if ((filter == -1) || ((argc - optind) != 1))
+	if ((filter == -1) || (filter !=4 &&((argc - optind) != 1)))
 		usage = 1;
 	if (usage == 1) {
 		printf("Usage: %s [-f filter] filename\n", argv[0]);
@@ -142,15 +145,17 @@ int main(int argc, char *argv[])
 	}
 
 	/* open file */
-	if (strcmp(argv[optind], "-") == 0) {
-		fd = stdin;
-	} else {
-		fd = fopen(argv[optind], "r");
-		if (fd <= 0) {
-			printf("Unable to open file %s\n", argv[optind]);
-			return EXIT_FAILURE;
-		}
-	}
+    if(filter != 4) {
+        if (strcmp(argv[optind], "-") == 0) {
+            fd = stdin;
+        } else {
+            fd = fopen(argv[optind], "r");
+            if (fd <= 0) {
+                printf("Unable to open file %s\n", argv[optind]);
+                return EXIT_FAILURE;
+            }
+        }
+    }
 
 	/* set callbacks */
 	rds_callback = &callback;
@@ -175,6 +180,12 @@ int main(int argc, char *argv[])
 		case 3:
 			retval = rds_decode_smp(fd);
 			break;
+        case 4:
+            retval = rds_decode_dab();
+            break;
+        case 5:
+            retval = rds_decode_spy(fd);
+            break;
 		}
 	} while (retval == EXIT_SUCCESS);
 
