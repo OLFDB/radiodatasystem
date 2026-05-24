@@ -1,4 +1,4 @@
-Class|Type|Text|Text_Q|Quantifier|Since|Comment
+Class|Type|Text|Text_Q|Quantifier|Since|Notes
 -|-|-|-|-|-|-
 COURTESY|(null)||||Reserved|
 COURTESY|S_COURTESY_SORRY_FOR_DELAY|sorry for any delay||||
@@ -125,19 +125,19 @@ POSITION|S_POSITION_SLOW_LANE|in the slow vehicle lane||||
 POSITION|S_POSITION_THROUGH_LANE|in the through traffic lane||||
 POSITION|S_POSITION_TURNING_LANE|in the turning lane||||
 QUALIFIER|(null)||||0.8|
-QUALIFIER|S_QUALIFIER_ACCESS_ONLY|access only|||Deprecated|
+QUALIFIER|S_QUALIFIER_ACCESS_ONLY|access only|||Deprecated|Use S_TRAFFIC_ACCESS_ONLY instead
 QUALIFIER|S_QUALIFIER_BORDER_ENTRY|on entry into the country|||0.8|
 QUALIFIER|S_QUALIFIER_BORDER_EXIT|on leaving the country|||0.8|
 QUALIFIER|S_QUALIFIER_DAYTIME|during the day time||||
 QUALIFIER|S_QUALIFIER_EXCEPT|except||||
 QUALIFIER|S_QUALIFIER_FAIRLY_FREQUENT_SERVICE|fairly frequent service||||
-QUALIFIER|S_QUALIFIER_FOR_ARRIVALS|for arrivals|||Deprecated|
-QUALIFIER|S_QUALIFIER_FOR_DEPARTURES|for departures|||Deprecated|
-QUALIFIER|S_QUALIFIER_FOR_HOLIDAY_TRAFFIC|for holiday traffic|||Deprecated|
+QUALIFIER|S_QUALIFIER_FOR_ARRIVALS|for arrivals|||Deprecated|Use S_TRAFFIC_ARRIVALS instead
+QUALIFIER|S_QUALIFIER_FOR_DEPARTURES|for departures|||Deprecated|Use S_TRAFFIC_DEPARTURES instead
+QUALIFIER|S_QUALIFIER_FOR_HOLIDAY_TRAFFIC|for holiday traffic|||Deprecated|Use S_TRAFFIC_HOLIDAY instead
 QUALIFIER|S_QUALIFIER_FOR_LIMITED_TIME|for a limited time||||
-QUALIFIER|S_QUALIFIER_FOR_LOCAL_TRAFFIC|for local traffic|||Deprecated|
+QUALIFIER|S_QUALIFIER_FOR_LOCAL_TRAFFIC|for local traffic|||Deprecated|Use S_TRAFFIC_LOCAL instead
 QUALIFIER|S_QUALIFIER_FOR_LONG_DISTANCE_TRAFFIC|for long distance traffic|||Deprecated|Use S_TRAFFIC_LONG_DISTANCE instead
-QUALIFIER|S_QUALIFIER_FOR_REGIONAL_TRAFFIC|for regional traffic|||Deprecated|
+QUALIFIER|S_QUALIFIER_FOR_REGIONAL_TRAFFIC|for regional traffic|||Deprecated|Use S_TRAFFIC_REGIONAL instead
 QUALIFIER|S_QUALIFIER_FOR_RESIDENTS|for residents|||Deprecated|Use S_TRAFFIC_RESIDENTS instead
 QUALIFIER|S_QUALIFIER_FOR_VISITORS|for visitors|||Deprecated|Use S_TRAFFIC_VISITORS instead
 QUALIFIER|S_QUALIFIER_FREQUENT_SERVICE|frequent service||||
@@ -198,7 +198,7 @@ VEHICLE|S_VEHICLE_CAR_WITH_TRAILER|for cars with trailers only|||0.1|
 VEHICLE|S_VEHICLE_DIESEL|for diesel-engined vehicles only|||Reserved|
 VEHICLE|S_VEHICLE_EVEN_PLATE|with even-numbered registration plates|||Reserved|
 VEHICLE|S_VEHICLE_EXCEPTIONAL_LOAD|for exceptional loads only|||Reserved|
-VEHICLE|S_VEHICLE_FERRY|for ferry service|||Deprecated|
+VEHICLE|S_VEHICLE_FERRY|for ferry service|||Deprecated|Use S_TRAFFIC_FERRY instead
 VEHICLE|S_VEHICLE_GASOLINE|for petrol-engined vehicles only|||Reserved|
 VEHICLE|S_VEHICLE_HAZMAT|for hazardous loads only|||0.1|
 VEHICLE|S_VEHICLE_HEAVY|for heavy vehicles only|for heavy vehicles over $Q only|q_weight|0.8|
@@ -208,8 +208,8 @@ VEHICLE|S_VEHICLE_LIGHT|for light vehicles only|for light vehicles below $Q only
 VEHICLE|S_VEHICLE_LPG|for LPG vehicles only|||Reserved|
 VEHICLE|S_VEHICLE_MOTOR|for all motor vehicles|||0.1|
 VEHICLE|S_VEHICLE_ODD_PLATE|with odd-numbered registration plates|||Reserved|
-VEHICLE|S_VEHICLE_RAIL|for rail services|||Deprecated|
-VEHICLE|S_VEHICLE_THROUGH_TRAFFIC|for through traffic|||Deprecated|
+VEHICLE|S_VEHICLE_RAIL|for rail services|||Deprecated|Use S_TRAFFIC_RAIL instead
+VEHICLE|S_VEHICLE_THROUGH_TRAFFIC|for through traffic|||Deprecated|Use S_TRAFFIC_THROUGH instead
 VEHICLE|S_VEHICLE_UNDERGROUND|on the underground|||Reserved|
 VEHICLE|S_VEHICLE_WITH_CAT|for vehicles with catalytic converters|||Reserved|
 VEHICLE|S_VEHICLE_WITH_TRAILER|for vehicles with trailers only|||0.1|
