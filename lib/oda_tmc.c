@@ -453,6 +453,8 @@ static int tmc_db_lcl_open(void)
  */
 void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
 {
+    rds_ecc_get_iso_itu_cid();
+
     char sql[] = "select CLASS,TCD,STCD,JUNCTIONNUMBER,RNID,N1ID,N2ID,POL_LCD,OTH_LCD,SEG_LCD,ROA_LCD,INPOS,INNEG,OUTPOS,OUTNEG,PRESENTPOS,PRESENTNEG,DIVERSIONPOS,DIVERSIONNEG,XCOORD,YCOORD,INTERRUPTSROAD,URBAN from POINTS where CID=__ and TABCD=_ and LCD=_____";
     sqlite3_stmt *stmt = NULL;
 
