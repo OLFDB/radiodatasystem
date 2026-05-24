@@ -499,7 +499,7 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
         if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
         {
             /*@+ignoresigns@ @-mustfreefresh@*/
-            strncpy(&_l->tclass, sqlite3_column_text(stmt, 0), 1);
+            strncpy(&_l->tclass, (const char *)sqlite3_column_text(stmt, 0), 1);
             /*@-ignoresigns@ @+mustfreefresh@*/
             _l->tcd = (uint16_t) sqlite3_column_int(stmt, 1);
             _l->stcd = (uint16_t) sqlite3_column_int(stmt, 2);
@@ -551,12 +551,12 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
         if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
         {
             /*@+ignoresigns@ @-mustfreefresh@*/
-            strncpy(&_l->tclass, sqlite3_column_text(stmt, 0), 1);
+            strncpy(&_l->tclass, (const char *)sqlite3_column_text(stmt, 0), 1);
             /*@-ignoresigns@ @+mustfreefresh@*/
             _l->tcd = (uint16_t) sqlite3_column_int(stmt, 1);
             _l->stcd = (uint16_t) sqlite3_column_int(stmt, 2);
             /*@+ignoresigns@ @-mustfreefresh@*/
-            strncpy(&_l->roadnumber[0], sqlite3_column_text(stmt, 3), 11);
+            strncpy(&_l->roadnumber[0], (const char *)sqlite3_column_text(stmt, 3), 11);
             /*@-ignoresigns@ @+mustfreefresh@*/
             _l->rnid = (uint16_t) sqlite3_column_int(stmt, 4);
             _l->n1id = (uint16_t) sqlite3_column_int(stmt, 5);
@@ -579,7 +579,10 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
                         (unsigned short int) _l->lcd);
         /*@-nullpass@*/
         (void) sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL);
-        if (sqlite3_step(stmt) == SQLITE_ROW)
+        if(stmt == NULL) {
+            printf("%s\n %i", sql, sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL));
+        }
+        if (stmt != NULL && sqlite3_step(stmt) == SQLITE_ROW)
         {
             /*@+ignoresigns@ @-mustfreefresh@*/
             strncpy(&_l->tclass, (const char *)sqlite3_column_text(stmt, 0), 1);
