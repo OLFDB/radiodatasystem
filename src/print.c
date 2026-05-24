@@ -105,7 +105,7 @@ void af_print(void)
 	uint8_t i;
 
 	/* get list */
-	for (i = 0; (i < rds_af_max) && (rds_program_current->af != 0); i+=2)
+    for (i = 0; (i < rds_af_max) && (&(rds_program_current->af) != 0); i+=2)
 		af_print_pair(
 			rds_program_current->af[i+0],
 			rds_program_current->af[i+1]);
