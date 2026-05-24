@@ -1,0 +1,73 @@
+/* Event List */
+CREATE TABLE EL (
+	CODE		NUMERIC(5),
+    TEXT_EN     CHAR(100),
+	TEXT		CHAR(100),
+	TEXT_Q0		CHAR(100),
+	TEXT_Q1		CHAR(100),
+	TEXT_QN		CHAR(100),
+	N		CHAR(1),
+	Q		NUMERIC(2),
+	T		CHAR(3),
+	D		NUMERIC(1),
+	U		CHAR(1),
+	C		NUMERIC(2),
+	R		CHAR(20),
+	COMMENT		CHAR(100),	/* to be removed */
+	PRIMARY KEY (CODE)
+);
+
+/* Forecase Event List */
+CREATE TABLE FEL (
+	CODE		NUMERIC(5),
+	TEXT		CHAR(100),
+	TEXT_Q0		CHAR(100),
+	TEXT_Q1		CHAR(100),
+	TEXT_QN		CHAR(100),
+	N		CHAR(1),
+	Q		NUMERIC(2),
+	T		CHAR(3),
+	D		NUMERIC(1),
+	U		CHAR(1),
+	C		NUMERIC(2),
+	R		CHAR(20),
+	PRIMARY KEY (CODE)
+);
+
+/* Phrase Codes */
+CREATE TABLE PC (
+	L		CHAR(1),
+	N		NUMERIC(5),
+	TEXT		CHAR(100),
+	TEXT_Q0		CHAR(100),
+	TEXT_Q1		CHAR(100),
+	TEXT_QN		CHAR(100),
+	COMMENT		CHAR(100),	/* to be removed */
+	PRIMARY KEY (L, N)
+);
+
+/* Quantifier Codes */
+CREATE TABLE QC (
+	CODE		NUMERIC(2),
+	L2		CHAR(50),
+	L3		CHAR(50),
+	L4_Q0		CHAR(50),
+	L4_Q1		CHAR(50),
+	L4_Q2		CHAR(50),
+	L4_Q3		CHAR(50),
+	L4_Q4		CHAR(50),
+	L4_Q5		CHAR(50),
+	PRIMARY KEY (CODE)
+);
+
+/* Supplementary Information List */
+CREATE TABLE SIL (
+	L		CHAR(1),
+	N		NUMERIC(5),
+	TEXT		CHAR(100),
+	TEXT_Q0		CHAR(100),
+	TEXT_Q1		CHAR(100),
+	TEXT_QN		CHAR(100),
+	COMMENT		CHAR(100),	/* to be removed */
+	PRIMARY KEY (L, N)
+);

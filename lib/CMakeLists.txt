@@ -1,0 +1,74 @@
+# The RDS library
+set(RDSLIBSRC_FILES
+af.c
+char_set.c
+ct.c
+di.c
+ecc.c
+eon.c
+erp.c
+ews.c
+ih.c
+lic.c
+ms.c
+oda_ert.c
+oda_irds.c
+oda_rasant.c
+oda_rtp.c
+oda_tmc.c
+oda.c
+pi.c
+pin.c
+ps.c
+pty.c
+ptyn.c
+rds.c
+rp.c
+rt.c
+ta.c
+tdc.c
+tp.c
+)
+add_library(rds SHARED)
+target_sources(rds
+  PRIVATE
+    ${RDSLIBSRC_FILES}
+
+  PUBLIC
+    FILE_SET myHeaders
+    TYPE HEADERS
+    BASE_DIRS
+      .
+    FILES
+     af.h
+char_set.h
+ct.h
+di.h
+doxygen.h
+ecc.h
+eon.h
+erp.h
+ews.h
+ih.h
+lic.h
+ms.h
+oda_ert.h
+oda_irds.h
+oda_rasant.h
+oda_rtp.h
+oda_tmc.h
+oda.h
+pi.h
+pin.h
+ps.h
+pty.h
+ptyn.h
+rds_private.h
+rds.h
+rp.h
+rt.h
+ta.h
+tdc.h
+tp.h
+)
+target_link_libraries(rds iconv sqlite3)
