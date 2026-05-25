@@ -402,12 +402,11 @@ int rds_decode_dab()
                                     stnshown=true;
                                 }
                                 
-                                printf("Count: %i\n", count);
                                 // check if an RDS program is received and seek if not, or seek after 120 sec
                                 if(count==5 || count==120) {
                                     if(rds_program_current==0 || (rds_program_current != 0 && rds_program_current->oda_tmc_sid==0) || count==120) {
                                         simpleble_peripheral_write_command(peripheral, service.uuid, uuid_tx, (const uint8_t *)"up", 2);
-                                        printf("Seek, no TMC program...\n");
+                                        printf((count==120)?"Seek after 120 seconds...\n":"Seek, no TMC program...\n");
                                         if(rds_program_current) {
                                             rds_program_current->ps[0]=0;
                                             rds_program_current->oda_tmc_sid=0;
