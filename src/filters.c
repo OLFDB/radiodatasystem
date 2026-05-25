@@ -397,7 +397,7 @@ int rds_decode_dab()
                             while(true) {
                                 SLEEP_SEC(1);
                                 
-                                if(rds_program_current && rds_program_current->ps && strcmp((char*)rds_program_current->ps, "") && !stnshown) {
+                                if(rds_program_current && strcmp((char*)rds_program_current->ps, "") && !stnshown) {
                                     printf("Stationname: %ls\n", rds_program_current->ps);
                                     stnshown=true;
                                 }
