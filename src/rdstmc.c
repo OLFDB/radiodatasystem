@@ -41,6 +41,14 @@
 
 #include <locale.h>
 
+#define BLK "\e[0;30m"
+#define RED "\e[0;31m"
+#define GRN "\e[0;32m"
+#define YEL "\e[0;33m"
+#define BLU "\e[0;34m"
+#define MAG "\e[0;35m"
+#define CYN "\e[0;36m"
+#define WHT "\e[0;37m"
 
 static sqlite3 *rds_oda_tmc_db_el;
 
@@ -714,22 +722,25 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 
 static void tmc_print(rds_oda_tmc_message_t *_msg, uint8_t _action)
 {
-    printf("\n========================================\n");
 	switch(_action) {
 	case 0: /* new message */
+        printf("\n%s========================================\n", GRN);
         printf("<new message>\n");
 		tmc_print_message(_msg);
 		break;
 	case 1: /* message updated (by timer or by reception) */
+        printf("\n%s========================================\n", YEL);
         printf("<message updated>\n");
         tmc_print_message(_msg);
 		break;
 	default: /* problem cleared (by cancellation message) */
+        printf("\n%s========================================\n", RED);
         printf("<message cleared>\n");
 		tmc_print_message(_msg);
         remove_traff_message(_msg);
 		break;
 	}
+    printf("%s", WHT);
 }
 
 static void callback(rds_program_t *new, rds_program_t *old)
