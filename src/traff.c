@@ -102,7 +102,7 @@ void traff_create_from_tmc_message(rds_oda_tmc_message_t *msg) {
         Message1.Receive_timeAttr = malloc(size);
         snprintf(Message1.Receive_timeAttr, size, "%s", rcvt);
     } else {
-        printf("Element empty: Message.Receive_timeAttr\n");
+//        printf("Element empty: Message.Receive_timeAttr\n");
     }
     
     // update_time
@@ -111,7 +111,7 @@ void traff_create_from_tmc_message(rds_oda_tmc_message_t *msg) {
         Message1.Update_timeAttr = malloc(size);
         snprintf(Message1.Update_timeAttr, size, "%s", updt);
     } else {
-        printf("Element empty: Message.Update_timeAttr\n");
+//        printf("Element empty: Message.Update_timeAttr\n");
     }
     
     // expiration_time
@@ -120,7 +120,7 @@ void traff_create_from_tmc_message(rds_oda_tmc_message_t *msg) {
         Message1.Expiration_timeAttr = malloc(size);
         snprintf(Message1.Expiration_timeAttr, size, "%s", expt);
     } else {
-        printf("Element empty: Message.Expiration_timeAttr\n");
+//        printf("Element empty: Message.Expiration_timeAttr\n");
     }
     
     sem_wait(&semaphore);
