@@ -662,8 +662,8 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 		printf("%s", tmc_get_duration_str(msg->nat, msg->dur_dl, msg->dur));
 		printf("\n");
 	}
-
-	/* optional message content */
+    
+   /* optional message content */
 	diversion_nr = 0;
 	evt_cnt = 1;
     int qrep=0;
@@ -673,7 +673,8 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
     int hpd=0;
     int sublbl=0;
     int length=0;
-    char* quantifier;
+    char* quantifier="";
+    int optional = 0;
 	for (i = 0; i < msg->opt_cnt; i++) {
 		unsigned short data = msg->opt[i].data;
 		unsigned short dur = msg->dur;
@@ -720,7 +721,7 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 			break;
 		case 6: /* Supplementary information */
 			rds_oda_tmc_get_phrase(&t[0], sizeof(t), 'Z', data, 0);
-			printf("%s\n", &t[0]);
+			printf("Sub: %s\n", &t[0]);
 			break;
 		case 7: /* Explicit start time */
 			printf("from ");
@@ -791,6 +792,8 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
         /* text */
         rds_oda_tmc_get_phrase(&t[0], sizeof(t), 0, msg->evt, evt_qnt[0]);
         
+        
+        
         if(length) {
             char* pos = strstr(&t[0], "(L)");
             if(pos) {
@@ -805,9 +808,10 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
                 strcat(&newtext[strlen(newtext)], pos+3);
                 printf("%s", newtext);
             }
+            length=0;
         }
         
-        if(quantifier) {
+        if(quantifier && strcmp(quantifier, "")) {
             char* pos = strstr(&t[0], "(Q)");
             if(pos) {
                 char* newtext=malloc(strlen(t) + strlen(quantifier) + 2);
@@ -820,13 +824,23 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
                 strcat(&newtext[strlen(newtext)], pos+3);
                 strncpy(t, newtext, sizeof(t));
             }
+            quantifier=0;
         }
         
         printf("%s\n", &t[0]);
         
-//        printf("%s\n", &t[0]);
+        printf("Optional %i: %s\n",i, &t[0]);
+        optional=1;
 	}
     
+    if(!optional) {
+        rds_oda_tmc_get_phrase(&t[0], sizeof(t), 0, msg->evt, evt_qnt[0]);
+        printf("%s -- %i\n", &t[0], msg->evt);
+        if(msg->evt == 0) // TODO: remove
+            msg->evt=msg->evt;
+    } else {
+        optional=0;
+    }
     
 	/* diversion advice */
 	if (msg->div) {
