@@ -533,7 +533,7 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 		printf("<Extremly Urgent>\n");
 		break;
 	default:
-		printf("<unknown %c>\n", msg->urg);
+		printf("<unknown Urgency: %c>\n", msg->urg);
 	}
 
 	/* nature */
@@ -548,7 +548,7 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 		printf("<Silent>\n");
 		break;
 	default:
-		printf("<unknown %c>\n", msg->nat);
+		printf("<unknown Nature: %c>\n", msg->nat);
 	}
 
 	/* loc = 0: reserved */
