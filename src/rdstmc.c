@@ -63,92 +63,211 @@ static void print_time(time_t _t)
 		printf("%s\n", buf);
 }
 
+static struct isotopos {
+    char iso[3];
+    int pos;
+}isotoarraypos;
+
+static struct isotopos isopos[2] = {{"EN", 0}, {"DE", 1}};
+
+static const char diversion_advice[sizeof isopos/sizeof(struct isotopos)][2][60] = {    /* diversion advice */
+    { // EN
+        "(no diversion recommended)",
+        "end-users are recommended to avoid the area if possible",
+    },
+    { // DE
+        "(keine Umleitung empfohlen",
+        "ortskundige sollten den Bereich weiträumig umfahren",
+    }
+};
+
+static int get_iso_pos(char* iso) {
+    int i;
+    
+    for (i=0; i<(sizeof isopos/sizeof(struct isotopos));i++) {
+        if(!strcmp(iso, isopos[i].iso))
+            break;
+    }
+    
+    // if country not found use EN as default
+    if(i==sizeof isopos/sizeof(struct isotopos))
+        return 0;
+    
+    return isopos[i].pos;
+}
+
 
 
 /* nature=info (I) duration=dynamic (D) */
 /* The situation is expected to continue ... */
-static const char duration_str_i_d[8][40] = {	/* dynamic events with an 'information' nature */
-	"(no explicit duration to be given)",	/* do not decrement */
-	"for at least the next 15 minutes",	/* do not decrement */
-	"for at least the next 30 minutes",	/* decrement after 15 minutes */
-	"for at least the next 1 hour",		/* decrement after 30 minutes */
-	"for at least the next 2 hours",	/* decrement after 1 hour */
-	"for at least the next 3 hours",	/* decrement after 1 hour */
-	"for at least the next 4 hours",	/* decrement after 1 hour */
-	"for the rest of the day"};		/* do not decrement */
+static const char duration_str_i_d[sizeof isopos/sizeof(struct isotopos)][8][40] = {	/* dynamic events with an 'information' nature */
+    {
+        "(no explicit duration to be given)",	/* do not decrement */
+        "for at least the next 15 minutes",	    /* do not decrement */
+        "for at least the next 30 minutes",	    /* decrement after 15 minutes */
+        "for at least the next 1 hour",		    /* decrement after 30 minutes */
+        "for at least the next 2 hours",	    /* decrement after 1 hour */
+        "for at least the next 3 hours",	    /* decrement after 1 hour */
+        "for at least the next 4 hours",	    /* decrement after 1 hour */
+        "for the rest of the day",		        /* do not decrement */
+    },
+    {
+        "(keine Dauer angegeben)",
+        "für mindestens die nächsten 15 Minuten",
+        "für mindestens die nächsten 30 Minuten",
+        "für mindestens die nächste Stunde",
+        "für mindestens die nächsten 2 Stunden",
+        "für mindestens die nächsten 3 Stunden",
+        "für mindestens die nächsten 4 Stunden",
+        "für den Rest des Tages",
+    }
+};
 
 /* nature=forecast (F) duration=dynamic (D) */
 /* The situation is expected ... */
-static const char duration_str_f_d[8][40] = {	/* dynamic events with an 'forecast' nature */
-	"(no explicit start-time to be given)",	/* do not decrement */
-	"within the next 15 minutes",		/* do not decrement */
-	"within the next 30 minutes",		/* decrement after 15 minutes */
-	"within the next 1 hour",		/* decrement after 30 minutes */
-	"within the next 2 hours",		/* decrement after 1 hour */
-	"within the next 3 hours",		/* decrement after 1 hour */
-	"within the next 4 hours",		/* decrement after 1 hour */
-	"later today"};				/* do not decrement */
+static const char duration_str_f_d[sizeof isopos/sizeof(struct isotopos)][8][40] = {	/* dynamic events with an 'forecast' nature */
+    {
+        "(no explicit start-time to be given)",	/* do not decrement */
+        "within the next 15 minutes",		    /* do not decrement */
+        "within the next 30 minutes",		    /* decrement after 15 minutes */
+        "within the next 1 hour",		        /* decrement after 30 minutes */
+        "within the next 2 hours",		        /* decrement after 1 hour */
+        "within the next 3 hours",		        /* decrement after 1 hour */
+        "within the next 4 hours",		        /* decrement after 1 hour */
+        "later today",				            /* do not decrement */
+    },
+    {
+        "(keine Startzeit angegeben)",
+        "in den nächsten 15 Minuten",
+        "in den nächsten 30 Minuten",
+        "in der nächsten Stunde",
+        "in den nächsten 2 Stunden",
+        "in den nächsten 3 Stunden",
+        "in den nächsten 4 Stunden",
+        "später heute",
+    }
+};
 
 /* nature=info (I) duration=longer-lasting (L) */
 /* The situation is expected to continue... */
-static const char duration_str_i_l[8][40] = {	/* long period 'information' events */
-	"(no explicit duration to be given)",	/* do not decrement */
-	"for the next few hours",		/* do not decrement */
-	"for the rest of the day",		/* do not decrement */
-	"until tomorrow evening",		/* decrement at midnight */
-	"for the rest of the week",		/* decrement Friday midnight */
-	"until the end of next week",		/* decrement Sunday midnight */
-	"until the end of the month",		/* do not decrement */
-	"for a long period"};			/* do not decrement */
+static const char duration_str_i_l[sizeof isopos/sizeof(struct isotopos)][8][40] = {	/* long period 'information' events */
+    {
+        "(no explicit duration to be given)",	/* do not decrement */
+        "for the next few hours",		        /* do not decrement */
+        "for the rest of the day",		        /* do not decrement */
+        "until tomorrow evening",		        /* decrement at midnight */
+        "for the rest of the week",		        /* decrement Friday midnight */
+        "until the end of next week",		    /* decrement Sunday midnight */
+        "until the end of the month",		    /* do not decrement */
+        "for a long period",			        /* do not decrement */
+    },
+    {
+        "(keine Dauer angegeben)",
+        "für die nächsten Stunden",
+        "für den Rest des Tages",
+        "bis morgen Abend",
+        "für den Rest der Woche",
+        "bis Ende nächster Woche",
+        "bis zum Ende des Monats",
+        "für einen langen Zeitraum",
+    }
+};
 
 /* nature=forecast (F) duration=long-lasting (L) */
 /* The situation is expected ... */
-static const char duration_str_f_l[8][40] = {	/* long period 'forecast' events */
-	"(no explicit time horizon given)",	/* do not decrement */
-	"within the next few hours",		/* do not decrement */
-	"later today",				/* do not decrement */
-	"tomorrow",				/* decrement at midnight */
-	"the day after tomorrow",		/* decrement at midnight */
-	"this weekend",				/* do not decrement */
-	"later this week",			/* do not decrement */
-	"next week"};				/* do not decrement */
-
-static const char diversion_advice[2][60] = {	/* diversion advice */
-	"(no diversion recommended)",
-	"end-users are recommended to avoid the area if possible"};
+static const char duration_str_f_l[sizeof isopos/sizeof(struct isotopos)][8][40] = {	/* long period 'forecast' events */
+    {
+        "(no explicit time horizon given)",	        /* do not decrement */
+        "within the next few hours",		        /* do not decrement */
+        "later today",				                /* do not decrement */
+        "tomorrow",				                    /* decrement at midnight */
+        "the day after tomorrow",		            /* decrement at midnight */
+        "this weekend",				                /* do not decrement */
+        "later this week",			                /* do not decrement */
+        "next week",				                /* do not decrement */
+    },
+    {
+        "(kein Zeitpunkt angegeben)",
+        "in den nächsten Stunden",
+        "später heute",
+        "morgen",
+        "übermorgen",
+        "dieses Wochenende",
+        "später diese Woche",
+        "nächste Woche",
+    }
+};
 
 /* duration=dynamic (D) */
-static const char persistance_str_d[8][60] = {
-	"15 minutes (no message to end-user)",
-	"15 minutes (with message to end-user)",
-	"30 minutes",
-	"1 hour",
-	"2 hours",
-	"3 hours",
-	"4 hours",
-	"until midnight on the day of message receipt"};
-
+static const char persistance_str_d[sizeof isopos/sizeof(struct isotopos)][8][60] = {
+    {
+        "15 minutes (no message to end-user)",
+        "15 minutes (with message to end-user)",
+        "30 minutes",
+        "1 hour",
+        "2 hours",
+        "3 hours",
+        "4 hours",
+        "until midnight on the day of message receipt",
+    },
+    {
+        "15 Minuten (keine Nachricht an den Nutzer)",
+        "15 Minuten (mit Nachricht an den Nutzer)",
+        "30 Minuten",
+        "1 Stunde",
+        "2 Stunden",
+        "3 Stunden",
+        "4 Stunden",
+        "bis Mitternacht am Tag des Nachrichtenempfangs"
+    }
+};
 /* nature=info (I) or silent (S) */
-static const char persistance_str_i[8][60] = {
-	"1 hour",
-	"2 hours",
-	"until midnight on the day of message receipt",
-	"until midnight on the day after message receipt",
-	"until midnight on the day after message receipt",
-	"until midnight on the day after message receipt",
-	"until midnight on the day after message receipt",
-	"until midnight on the day after message receipt"};
+static const char persistance_str_i[sizeof isopos/sizeof(struct isotopos)][8][62] = {
+    {
+        "1 hour",
+        "2 hours",
+        "until midnight on the day of message receipt",
+        "until midnight on the day after message receipt",
+        "until midnight on the day after message receipt",
+        "until midnight on the day after message receipt",
+        "until midnight on the day after message receipt",
+        "until midnight on the day after message receipt",
+    },
+    {
+        "1 Stunde",
+        "2 Stunden",
+        "bis Mitternacht am Tag des Nachrichtenempfangs",
+        "bis Mitternacht am auf den Nachrichtenempfang folgenden Tages",
+        "bis Mitternacht am auf den Nachrichtenempfang folgenden Tages",
+        "bis Mitternacht am auf den Nachrichtenempfang folgenden Tages",
+        "bis Mitternacht am auf den Nachrichtenempfang folgenden Tages",
+        "bis Mitternacht am auf den Nachrichtenempfang folgenden Tages",
+    }
+};
 
 /* nature=forecast (F) */
-static const char persistance_str_f[8][60] = {
-	"1 hour",
-	"2 hours",
-	"until midnight on the day of message receipt",
-	"until midnight on the day after message receipt",
-	"until midnight on the day after message receipt",
-	"until midnight on the day after message receipt",
-	"until midnight on the day after message receipt",
-	"until midnight on the day after message receipt"};
+static const char persistance_str_f[sizeof isopos/sizeof(struct isotopos)][8][62] = {
+    {
+        "1 hour",
+        "2 hours",
+        "until midnight on the day of message receipt",
+        "until midnight on the day after message receipt",
+        "until midnight on the day after message receipt",
+        "until midnight on the day after message receipt",
+        "until midnight on the day after message receipt",
+        "until midnight on the day after message receipt",
+    },
+    {
+        "1 Stunde",
+        "2 Stunden",
+        "bis Mitternacht am Tag des Nachrichtenempfangs",
+        "bis Mitternacht am auf den Nachrichtenempfang folgenden Tages",
+        "bis Mitternacht am auf den Nachrichtenempfang folgenden Tages",
+        "bis Mitternacht am auf den Nachrichtenempfang folgenden Tages",
+        "bis Mitternacht am auf den Nachrichtenempfang folgenden Tages",
+        "bis Mitternacht am auf den Nachrichtenempfang folgenden Tages",
+    }
+};
 
 
 /**
@@ -169,13 +288,13 @@ static char *tmc_get_duration_str(uint8_t n, uint8_t d, uint8_t dp)
 	memset(&s, 0, sizeof(s));
 
 	if ((n == 'I') && (d == 'D')) {
-		snprintf(&s[0], sizeof(s), "The situation is expected to continue %s", duration_str_i_d[dp]);
+		snprintf(&s[0], sizeof(s), "The situation is expected to continue %s", duration_str_i_d[get_iso_pos(rds_program_current->iso)][dp]);
 	} else if ((n == 'F') && (d == 'D')) {
-		snprintf(&s[0], sizeof(s), "The situation is expected %s", duration_str_f_d[dp]);
+		snprintf(&s[0], sizeof(s), "The situation is expected %s", duration_str_f_d[get_iso_pos(rds_program_current->iso)][dp]);
 	} else if ((n == 'I') && (d == 'L')) {
-		snprintf(&s[0], sizeof(s), "The situation is expected to continue %s", duration_str_i_l[dp]);
+		snprintf(&s[0], sizeof(s), "The situation is expected to continue %s", duration_str_i_l[get_iso_pos(rds_program_current->iso)][dp]);
 	} else if ((n == 'F') && (d == 'L')) {
-		snprintf(&s[0], sizeof(s), "The situation is expected %s", duration_str_f_l[dp]);
+		snprintf(&s[0], sizeof(s), "The situation is expected %s", duration_str_f_l[get_iso_pos(rds_program_current->iso)][dp]);
 	}
 
 	return &s[0];
@@ -711,7 +830,7 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
     
 	/* diversion advice */
 	if (msg->div) {
-		printf("%s", diversion_advice[msg->div]);
+		printf("%s", diversion_advice[get_iso_pos(rds_program_current->iso)][msg->div]);
 		printf("\n");
 	}
     
