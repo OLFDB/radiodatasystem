@@ -128,7 +128,9 @@ int main(int argc, char *argv[])
                       filter = 4;
                 } else if (strcmp(optarg, "spy") == 0) {
                       filter = 5;
-                } else
+                } if (strcmp(optarg, "fmdx") == 0) {
+                    filter = 6;
+                }else
                     filter = -1;
 			break;
 		default: /* '?' */
@@ -137,7 +139,7 @@ int main(int argc, char *argv[])
 	}
 
 	/* safety checks */
-	if ((filter == -1) || (filter !=4 &&((argc - optind) != 1)))
+	if ((filter == -1) || ((filter !=4 && (argc - optind) != 1) && (filter !=6 && (argc - optind) != 1)))
 		usage = 1;
 	if (usage == 1) {
 		printf("Usage: %s [-f filter] filename\n", argv[0]);
@@ -145,7 +147,7 @@ int main(int argc, char *argv[])
 	}
 
 	/* open file */
-    if(filter != 4) {
+    if(filter != 4 && filter != 6) {
         if (strcmp(argv[optind], "-") == 0) {
             fd = stdin;
         } else {
@@ -185,6 +187,9 @@ int main(int argc, char *argv[])
             break;
         case 5:
             retval = rds_decode_spy(fd);
+            break;
+        case 6:
+            retval = rds_decode_fm_dx_tcp(0, 0);
             break;
 		}
 	} while (retval == EXIT_SUCCESS);

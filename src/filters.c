@@ -32,6 +32,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "../lib/rds.h"
+#include <netdb.h>
+#include <sys/socket.h>
 
 #include <simplecble/simplecble.h>
 #include <simplecble/adapter.h>
@@ -450,4 +452,89 @@ void  INThandler(int sig)
     exit(0);
 }
 
+int sockfd;
+void INThandler2(int sig);
 
+void INThandler2(int sig)
+{
+    printf("\nSignal Handler called to release socket.\n");
+    
+    if(sockfd)
+        close(sockfd);
+    
+    exit(0);
+}
+
+/* format fm-dx websocket TODO: address and port. */
+ /* Currently fixed localhost:7373 */
+int rds_decode_fm_dx_tcp(char* address, char* port) {
+    {
+        signal(SIGINT, INThandler2);
+        static uint8_t    buf[16];
+        static unsigned int rds[4];
+        static uint8_t sbuf[100];
+        
+        /* clear RDS buffer */
+        memset(&buf, 0, sizeof(buf));
+        
+        struct sockaddr_in servaddr;
+        
+        // socket create and varification
+        sockfd = socket(AF_INET, SOCK_STREAM, 0);
+        if (sockfd == -1) {
+            printf("socket creation failed...\n");
+            exit(0);
+        }
+        
+        bzero(&servaddr, sizeof(servaddr));
+        servaddr.sin_family = AF_INET;
+        servaddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+        servaddr.sin_port = htons(7373);
+        
+        // connect the client socket to server socket
+        if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) != 0) {
+            printf("connection with the server failed...\nDid you start ws2tcp.py like e.g. ws2tcp.py -W ws://kurer501.lb7ye.net:8080/rds ?");
+            exit(0);
+        } else{
+            printf("connected to the server..\n");
+            
+            long x;
+            char nextCommand[100];
+            
+            // code for reading rdsspy files
+            do {
+                x=read(sockfd,sbuf,99);
+                
+                if (x > 0)
+                {
+                    int cmdpos = 0;
+                    for (int i=0; i<x; i++)
+                    {
+                        char c = sbuf[i];
+                        if (c == '\r')
+                        {
+                            if (strlen(nextCommand) > 0)
+                            {
+                                if(strlen(nextCommand)==16) {
+                                    x=sscanf((const char*)nextCommand, "%4X%4X%4X%4X",
+                                             (unsigned int *)&rds[0], (unsigned int *)&rds[1], (unsigned int *)&rds[2], (unsigned int *)&rds[3]);
+                                    rds_decode(rds[0], rds[1], rds[2], rds[3]);
+                                }
+                                memset(nextCommand,0,sizeof(nextCommand));
+                            }
+                            i++; //skip \n
+                            cmdpos=0;
+                        }
+                        else nextCommand[cmdpos++]=c;
+                    }
+                }
+                SLEEP_SEC(0.01);
+            } while (sockfd);
+            
+        }
+        
+        close(sockfd);
+        
+        return EXIT_SUCCESS;
+    }
+}

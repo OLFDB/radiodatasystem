@@ -37,6 +37,7 @@ int rds_decode_csv(FILE *fd);
 int rds_decode_smp(FILE *fd);
 int rds_decode_dab();
 int rds_decode_spy(FILE *fd);
+int rds_decode_fm_dx_tcp(char* address, char* port);
 
 
 #endif /* FILTERS_H */
