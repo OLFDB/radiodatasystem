@@ -666,7 +666,7 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 //	printf("\n");
 
 	/* duration */
-	if ((msg->dur > 0) && (msg->stop_time==-1)) {
+	if ((msg->dur > 0) && (msg->stop_time==0)) {
 		/* only show this, if we have no explicit stop_time */
 		//printf("dur=<%c,%c,%i>", msg->nat, msg->dur_dl, msg->dur);
 		printf("%s", tmc_get_duration_str(msg->nat, msg->dur_dl, msg->dur));
