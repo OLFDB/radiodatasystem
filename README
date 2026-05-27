@@ -35,3 +35,9 @@ Slovakia	https://www.cdb.sk/en/traffic-information-rds-tmc/lt-sk-v5-0.alej
 		Registration and License to be signed
 Sweden		https://bransch.trafikverket.se/en/startpage/operations/Operations-road/Traffic-information/The-Swedish-Location-Table-for-TMC/
 		Registration required
+
+====================================================================================================================================
+Simple BLE warning:
+The dab filter uses SimpleBLE. If you plan to use the produced binaries in a commercial use case you are required to buy a lincense.
+See https://simpleble.org for details.
+====================================================================================================================================
