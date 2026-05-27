@@ -304,7 +304,7 @@ static char *tmc_get_duration_str(uint8_t n, uint8_t d, uint8_t dp)
 	} else if ((n == 'I') && (d == 'L')) {
 		snprintf(&s[0], sizeof(s), duration_pre_str[get_iso_pos(rds_program_current->iso)][n == 'I'?0:1], duration_str_i_l[get_iso_pos(rds_program_current->iso)][dp]);
 	} else if ((n == 'F') && (d == 'L')) {
-		snprintf(&s[0], sizeof(s), "The situation is expected %s", duration_str_f_l[get_iso_pos(rds_program_current->iso)][dp]);
+		snprintf(&s[0], sizeof(s), duration_pre_str[get_iso_pos(rds_program_current->iso)][n == 'I'?0:1], duration_str_f_l[get_iso_pos(rds_program_current->iso)][dp]);
 	}
 
 	return &s[0];
