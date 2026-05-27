@@ -466,7 +466,7 @@ void rds_oda_tmc_lcl_get_location(uint16_t _lcd, rds_oda_tmc_lcl_location_t *_l)
         return;
 
     /* preset identical values from columns CID, TABCD and LCD */
-    _l->cid = 58; //rds_program_current->oda_tmc_cid;
+    _l->cid = rds_program_current->oda_tmc_cid;
     _l->tabcd = rds_oda_tmc_dsp_current->ltn;
     _l->lcd = _lcd;
 
