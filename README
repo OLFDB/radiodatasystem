@@ -38,6 +38,6 @@ Sweden		https://bransch.trafikverket.se/en/startpage/operations/Operations-road/
 
 ====================================================================================================================================
 Simple BLE warning:
-The dab filter uses SimpleBLE. If you plan to use the produced binaries in a commercial use case you are required to buy a lincense.
+The dab filter uses SimpleBLE. If you plan to use the produced binaries in a commercial use case you are required to buy a license.
 See https://simpleble.org for details.
 ====================================================================================================================================
