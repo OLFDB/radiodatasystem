@@ -528,7 +528,6 @@ int rds_decode_fm_dx_tcp(char* address, char* port) {
                         else nextCommand[cmdpos++]=c;
                     }
                 }
-                SLEEP_SEC(0.01);
             } while (sockfd);
             
         }
