@@ -661,9 +661,9 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
 		}
 	}
 
-	/* Quantifier */
-	printf("qnt=<%i>", msg->qnt);
-	printf("\n");
+//	/* Quantifier */
+//	printf("qnt=<%i>", msg->qnt);
+//	printf("\n");
 
 	/* duration */
 	if ((msg->dur > 0) && (msg->stop_time==-1)) {
