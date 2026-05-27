@@ -269,6 +269,16 @@ static const char persistance_str_f[sizeof isopos/sizeof(struct isotopos)][8][62
     }
 };
 
+static const char duration_pre_str[sizeof isopos/sizeof(struct isotopos)][2][62] = {
+    {
+        "The situation is expected to continue %s",
+        "The situation is expected %s",
+    },
+    {
+        "Die Situation dauert vorraussichtlich an %s",
+        "Die Situation wird erwartet %s",
+    }
+};
 
 /**
  * \brief Decoding of ident information
@@ -288,11 +298,11 @@ static char *tmc_get_duration_str(uint8_t n, uint8_t d, uint8_t dp)
 	memset(&s, 0, sizeof(s));
 
 	if ((n == 'I') && (d == 'D')) {
-		snprintf(&s[0], sizeof(s), "The situation is expected to continue %s", duration_str_i_d[get_iso_pos(rds_program_current->iso)][dp]);
+        snprintf(&s[0], sizeof(s), duration_pre_str[get_iso_pos(rds_program_current->iso)][n == 'I'?0:1], duration_str_i_d[get_iso_pos(rds_program_current->iso)][dp]);
 	} else if ((n == 'F') && (d == 'D')) {
-		snprintf(&s[0], sizeof(s), "The situation is expected %s", duration_str_f_d[get_iso_pos(rds_program_current->iso)][dp]);
+		snprintf(&s[0], sizeof(s), duration_pre_str[get_iso_pos(rds_program_current->iso)][n == 'I'?0:1], duration_str_f_d[get_iso_pos(rds_program_current->iso)][dp]);
 	} else if ((n == 'I') && (d == 'L')) {
-		snprintf(&s[0], sizeof(s), "The situation is expected to continue %s", duration_str_i_l[get_iso_pos(rds_program_current->iso)][dp]);
+		snprintf(&s[0], sizeof(s), duration_pre_str[get_iso_pos(rds_program_current->iso)][n == 'I'?0:1], duration_str_i_l[get_iso_pos(rds_program_current->iso)][dp]);
 	} else if ((n == 'F') && (d == 'L')) {
 		snprintf(&s[0], sizeof(s), "The situation is expected %s", duration_str_f_l[get_iso_pos(rds_program_current->iso)][dp]);
 	}
