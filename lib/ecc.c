@@ -52,7 +52,7 @@ void rds_ecc_get_iso_itu_cid(void)
 
     /* SQL request */
     (void) snprintf(&sql[0], sizeof(sql), "select ISO,ITU,CID from CC where ECC='%2.2hX' and CCD='%1.1hX'",
-                    (unsigned short int) 0xE0, //rds_program_current->ecc, TODO: Fix ecc decoding
+                    (unsigned short int) (rds_program_current->ecc==0)?0xE0:rds_program_current->ecc, // TODO: In Germany some stations don't send ECC
                     (unsigned short int) rds_pi_cc(rds_program_current->pi));
     /*@-nullpass@*/
     (void) sqlite3_prepare(rds_db_lang, sql, (int) sizeof(sql), /*@-nullstate@*/ &stmt /*@+nullstate@*/, NULL);
