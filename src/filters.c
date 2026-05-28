@@ -336,6 +336,7 @@ int rds_decode_dab()
         return 1;
     }
     
+    printf("===========================================================================================================================\nSimple BLE warning: \nThe dab filter uses SimpleBLE. If you plan to use this software in a commercial use case you are required to buy a license. \nSee https://simpleble.org for details. \n===========================================================================================================================\n\n");
     printf("Scanning for DAB BLE device...\n");
     
     simpleble_adapter_scan_for(adapter, 5000);
