@@ -26,15 +26,22 @@ Sources for TMC location code lists (from http://wiki.openstreetmap.org/wiki/TMC
 ---------------------------------------------------------------------------------
 Germany		https://www.bast.de/DE/Themen/Digitales/HF_1/Massnahmen/LCL/location-code-list.html
 		Free download
+		Database name E0_D_01
 Italy		https://www.cciss.it/web/cciss/database-rds-tmc
 		Free download
-		FM-DX source: Andys Headless ws://2.36.236.234:8080/rds Radio2 88.5MHz
+		FM-DX source: Andys Headless ws://2.36.236.234:8080/rds Radio2 93.7MHz
+		Database name E0_5_01
 Norway		https://www.vegvesen.no/en/fag/technology/open-data/a-selection-of-open-data/rds-tmc/
 		Free Download
+		Database name E2_F_01
+		No FM TMC service broadcasted anymore
 Slovakia	https://www.cdb.sk/en/traffic-information-rds-tmc/lt-sk-v5-0.alej
 		Registration and License to be signed
+		Database name E2_5_01
 Sweden		https://bransch.trafikverket.se/en/startpage/operations/Operations-road/Traffic-information/The-Swedish-Location-Table-for-TMC/
 		Registration required
+		Database name E3_E_01
+		No FM TMC service broadcasted anymore
 
 ====================================================================================================================================
 Simple BLE warning:
