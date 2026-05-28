@@ -81,7 +81,7 @@ static const char diversion_advice[sizeof isopos/sizeof(struct isotopos)][2][60]
     }
 };
 
-static int get_iso_pos(char* iso) {
+static int get_iso_pos(char* iso) { // TODO: make index a cmd line parameter
     int i;
     
     for (i=0; i<(sizeof isopos/sizeof(struct isotopos));i++) {
