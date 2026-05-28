@@ -401,7 +401,7 @@ static int tmc_db_lcl_open(void)
 
     (void) snprintf(&filename[0], sizeof(filename), "%s/tmc_lcl_%2.2X_%1.1X_%2.2X.db",
                     /*@-unrecog@*/ DATADIR /*@+unrecog@*/,
-                    (unsigned short int) 0xE0,//rds_program_current->ecc, TODO: Why ECC is not correct?
+                    (unsigned short int) 0xE0,//rds_program_current->ecc, TODO: ECC might not be broadcasted (e.g. Germany ARD). Use a startup parameter?
                     (unsigned short int) rds_pi_cc(rds_program_current->pi),
                     (unsigned short int) rds_oda_tmc_dsp_current->ltn);
 
@@ -424,8 +424,7 @@ static int tmc_db_lcl_open(void)
         }
 
         /* read language ID */
-        (void) snprintf(&sql[0], sizeof(sql), "select LID from LANGUAGES where CID=%hu", 58);
-           //             (unsigned short int) rds_program_current->oda_tmc_cid);
+        (void) snprintf(&sql[0], sizeof(sql), "select LID from LANGUAGES where CID=%hu", (unsigned short int) rds_program_current->oda_tmc_cid);
         (void) sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL);
         if(stmt == NULL) {
             printf("Not found CID: %u -- %s\n %i",(unsigned short int) rds_program_current->oda_tmc_cid, sql, sqlite3_prepare(rds_oda_tmc_db_lcl, sql, (int) sizeof(sql), &stmt, NULL));
