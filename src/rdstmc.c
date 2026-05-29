@@ -81,12 +81,17 @@ static const char diversion_advice[sizeof isopos/sizeof(struct isotopos)][2][60]
     }
 };
 
-static int get_iso_pos(char* iso) { // TODO: make index a cmd line parameter
+static int get_iso_pos(char* iso) {
     int i;
-    
+    extern char * locprm;
     for (i=0; i<(sizeof isopos/sizeof(struct isotopos));i++) {
-        if(!strcmp(iso, isopos[i].iso))
-            break;
+        if(locprm) {
+            if(!strcmp(locprm, isopos[i].iso))
+                break;
+        } else {
+            if(!strcmp(iso, isopos[i].iso))
+                break;
+        }
     }
     
     // if country not found use EN as default
