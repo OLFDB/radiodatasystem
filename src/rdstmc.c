@@ -807,23 +807,33 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
         /* text */
         rds_oda_tmc_get_phrase(&t[0], sizeof(t), 0, msg->evt, evt_qnt[0]);
         
+        char* pos = strstr(&t[0], "(L)");
         
-        
-        if(length) {
-            char* pos = strstr(&t[0], "(L)");
-            if(pos) {
-                char* newtext=malloc(strlen(t) + length/10+2);
+        if(pos) {
+            if(length) {
+                char* cleanedtxt=malloc(strlen(t) + length/10+2);
                 if(pos-&t[0]>0)
-                    strncpy(newtext, &t[0], pos -&t[0]);
+                    strncpy(cleanedtxt, &t[0], pos -&t[0]);
                 else
-                    newtext[0]='\0';
-                char test[100];
-                snprintf(test, snprintf(NULL, 0, "%ikm", length)+1, "%ikm", length);
-                strcat(newtext, test);
-                strcat(&newtext[strlen(newtext)], pos+3);
-                printf("%s", newtext);
+                    cleanedtxt[0]='\0';
+                char buf[100];
+                snprintf(buf, snprintf(NULL, 0, "%ikm", length)+1, "%ikm", length);
+                strcat(cleanedtxt, buf);
+                strcat(&cleanedtxt[strlen(cleanedtxt)], pos+3);
+                printf("%s", cleanedtxt);
+                free(cleanedtxt);
+                length=0;
+            } else {
+                char* cleanedtxt=malloc(strlen(t));
+                if(pos-&t[0]>0) {
+                    strncpy(cleanedtxt, &t[0], pos - &t[0]); // "'Teil 1 '(L) Teil 2"
+                    strcat(cleanedtxt, &t[pos - &t[0] + 4]);  // "Teil 1 (L) 'Teil 2'"
+                } else {
+                    strcpy(cleanedtxt, &t[3]); // "(L) Der Rest"
+                }
+                printf("%s", cleanedtxt);
+                free(cleanedtxt);
             }
-            length=0;
         }
         
         if(quantifier && strcmp(quantifier, "")) {
@@ -838,6 +848,7 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
                 strcat(newtext, test);
                 strcat(&newtext[strlen(newtext)], pos+3);
                 strncpy(t, newtext, sizeof(t));
+                free(newtext);
             }
             quantifier=0;
         }
