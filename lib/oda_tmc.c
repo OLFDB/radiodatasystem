@@ -401,7 +401,7 @@ static int tmc_db_lcl_open(void)
 
     (void) snprintf(&filename[0], sizeof(filename), "%s/tmc_lcl_%2.2X_%1.1X_%2.2X.db",
                     /*@-unrecog@*/ DATADIR /*@+unrecog@*/,
-                    (unsigned short int) 0xE0,//rds_program_current->ecc, TODO: ECC might not be broadcasted (e.g. Germany ARD). Use a startup parameter?
+                    (unsigned short int) (rds_program_current->ecc==0)?(eccprm==0?0xE0:eccprm):rds_program_current->ecc,
                     (unsigned short int) rds_pi_cc(rds_program_current->pi),
                     (unsigned short int) rds_oda_tmc_dsp_current->ltn);
 
