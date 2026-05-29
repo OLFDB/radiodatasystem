@@ -976,7 +976,7 @@ int main(int argc, char *argv[])
             sscanf(optarg, "%2x", &eccprm);
             break;
         case 'l': // localization of optionals
-            locprm = atoi(optarg);
+            locprm = optarg;
             break;
 		default: /* '?' */
 			usage = 1;
