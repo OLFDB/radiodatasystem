@@ -941,8 +941,12 @@ int main(int argc, char *argv[])
 	int filter = 0;
 	int usage  = 0;
 	int retval = 0;
+    extern unsigned int eccprm;
+    extern char * locprm;
+    
+    locprm = -1;
 
-	while ((opt = getopt(argc, argv, "f:")) != -1) {
+	while ((opt = getopt(argc, argv, "f:e:l:")) != -1) {
 		switch (opt) {
 		case 'f':
 			if (strcmp(optarg, "v4l") == 0) {
@@ -968,6 +972,12 @@ int main(int argc, char *argv[])
             } else
                 filter = -1;
 			break;
+        case 'e': // ecc in case no ecc is broadcasted
+            sscanf(optarg, "%2x", &eccprm);
+            break;
+        case 'l': // localization of optionals
+            locprm = atoi(optarg);
+            break;
 		default: /* '?' */
 			usage = 1;
 		}
