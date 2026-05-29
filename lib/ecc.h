@@ -30,6 +30,7 @@
 
 #include <stdint.h>
 
+unsigned int eccprm;
 
 /**
  * \brief Set ISO, ITU and CID based on CC and ECC
