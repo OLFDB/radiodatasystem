@@ -1713,7 +1713,7 @@ static void tmc_handle_message(void)
         }
     }
 
-    /* execute callback with 0=message update */
+    /* execute callback with 0=new message */
     if (rds_oda_tmc_callback != NULL)
         rds_oda_tmc_callback(&rds_oda_tmc_dsp_current->msg, 0);
 
