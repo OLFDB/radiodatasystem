@@ -322,119 +322,132 @@ char* peripheral_identifier;
 char* peripheral_address;
 simpleble_adapter_t adapter;
 simpleble_uuid_t uuid_tx;
+bool disconnected=false;
+
+void on_disconnected_callback(simpleble_peripheral_t peripheral, void* user_data) {
+    printf("\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\nBLE connection terminated.! Trying to reconnect...\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n");
+    disconnected = true;
+}
 
 /* OLFsDABRadio */
 int rds_decode_dab()
 {
-    adapter = simpleble_adapter_get_handle(0);
-    size_t adapter_count = simpleble_adapter_get_count();
-    
-    simpleble_err_t err_code = SIMPLEBLE_SUCCESS;
-    
-    if (adapter_count == 0) {
-        printf("No adapter was found.\n");
-        return 1;
-    }
-    
     printf("===========================================================================================================================\nSimple BLE warning: \nThe dab filter uses SimpleBLE. If you plan to use this software in a commercial use case you are required to buy a license. \nSee https://simpleble.org for details. \n===========================================================================================================================\n\n");
     printf("Scanning for DAB BLE device...\n");
     
-    simpleble_adapter_scan_for(adapter, 5000);
-    
-    // Sleep for an additional second before returning.
-    // If there are any detections during this period, it means that the
-    // internal peripheral took longer to stop than anticipated.
-    SLEEP_SEC(1);
-    
-    size_t peripheral_count = simpleble_adapter_scan_get_results_count(adapter);
-    for (size_t peripheral_index = 0; peripheral_index < peripheral_count; peripheral_index++) {
-        peripheral = simpleble_adapter_scan_get_results_handle(adapter, peripheral_index);
+    while(true) {
+        disconnected = false;
+        adapter = simpleble_adapter_get_handle(0);
+        size_t adapter_count = simpleble_adapter_get_count();
         
-        peripheral_identifier = simpleble_peripheral_identifier(peripheral);
-        peripheral_address = simpleble_peripheral_address(peripheral);
+        simpleble_err_t err_code = SIMPLEBLE_SUCCESS;
         
-        bool peripheral_connectable = false;
-        simpleble_peripheral_is_connectable(peripheral, &peripheral_connectable);
+        if (adapter_count == 0) {
+            printf("No adapter was found.\n");
+            return 1;
+        }
         
-        int16_t peripheral_rssi = simpleble_peripheral_rssi(peripheral);
+        simpleble_adapter_scan_for(adapter, 2000);
         
-        printf("[%zu] %s [%s] %d dBm %s\n", peripheral_index, peripheral_identifier, peripheral_address,
-               peripheral_rssi, peripheral_connectable ? "Connectable" : "Non-Connectable");
+        // Sleep for an additional second before returning.
+        // If there are any detections during this period, it means that the
+        // internal peripheral took longer to stop than anticipated.
+        SLEEP_SEC(1);
         
-        if(!strcmp(peripheral_identifier, "DAB")) {
-            err_code = simpleble_peripheral_connect(peripheral);
-            if (err_code != SIMPLEBLE_SUCCESS) {
-                printf("Failed to connect.\n");
-                return 1;
-            }
+        size_t peripheral_count = simpleble_adapter_scan_get_results_count(adapter);
+        for (size_t peripheral_index = 0; peripheral_index < peripheral_count; peripheral_index++) {
+            peripheral = simpleble_adapter_scan_get_results_handle(adapter, peripheral_index);
             
-            size_t characteristic_count = 0;
-            for (size_t i = 0; i < simpleble_peripheral_services_count(peripheral); i++) {
-                simpleble_service_t service;
-                err_code = simpleble_peripheral_services_get(peripheral, i, &service);
+            peripheral_identifier = simpleble_peripheral_identifier(peripheral);
+            peripheral_address = simpleble_peripheral_address(peripheral);
+            
+            bool peripheral_connectable = false;
+            simpleble_peripheral_is_connectable(peripheral, &peripheral_connectable);
+            
+            int16_t peripheral_rssi = simpleble_peripheral_rssi(peripheral);
+            
+            if(!strcmp(peripheral_identifier, "DAB")) {
                 
+                printf("\n\nFound: [%zu] %s [%s] %d dBm %s\n", peripheral_index, peripheral_identifier, peripheral_address,
+                       peripheral_rssi, peripheral_connectable ? "Connectable" : "Non-Connectable");
+                
+                err_code = simpleble_peripheral_connect(peripheral);
                 if (err_code != SIMPLEBLE_SUCCESS) {
-                    printf("Failed to get service.\n");
+                    printf("Failed to connect.\n");
                     return 1;
                 }
                 
-                for (size_t j = 0; j < service.characteristic_count; j++) {
-                    if(!strcmp(service.uuid.value, "6e400001-b5a3-f393-e0a9-e50e24dcca9e")) {
-                        if(!strcmp(service.characteristics[j].uuid.value, "6e400002-b5a3-f393-e0a9-e50e24dcca9e")) {
-                            uuid_tx = service.characteristics[j].uuid;
+                simpleble_peripheral_set_callback_on_disconnected(peripheral, on_disconnected_callback, NULL);
+                
+                size_t characteristic_count = 0;
+                for (size_t i = 0; i < simpleble_peripheral_services_count(peripheral); i++) {
+                    simpleble_service_t service;
+                    err_code = simpleble_peripheral_services_get(peripheral, i, &service);
+                    
+                    if (err_code != SIMPLEBLE_SUCCESS) {
+                        printf("Failed to get service.\n");
+                        return 1;
+                    }
+                    
+                    for (size_t j = 0; j < service.characteristic_count; j++) {
+                        if(!strcmp(service.uuid.value, "6e400001-b5a3-f393-e0a9-e50e24dcca9e")) {
+                            if(!strcmp(service.characteristics[j].uuid.value, "6e400002-b5a3-f393-e0a9-e50e24dcca9e")) {
+                                uuid_tx = service.characteristics[j].uuid;
+                            }
                         }
                     }
-                }
-                
-                for (size_t j = 0; j < service.characteristic_count; j++) {
-                    printf("[%zu] %s %s\n", characteristic_count, service.uuid.value, service.characteristics[j].uuid.value);
-                    if(!strcmp(service.uuid.value, "6e400001-b5a3-f393-e0a9-e50e24dcca9e")) {
-                        if(!strcmp(service.characteristics[j].uuid.value, "6e400003-b5a3-f393-e0a9-e50e24dcca9e")) {
-                            
-                            signal(SIGINT, INThandler);
-                            
-                            simpleble_peripheral_notify(peripheral, service.uuid,
-                                                        service.characteristics[j].uuid, peripheral_on_notify, NULL);
-                            int count=0;
-                            bool stnshown = false;
-                            while(true) {
-                                SLEEP_SEC(1);
+                    
+                    for (size_t j = 0; j < service.characteristic_count; j++) {
+                        printf("[%zu] %s %s\n", characteristic_count, service.uuid.value, service.characteristics[j].uuid.value);
+                        if(!strcmp(service.uuid.value, "6e400001-b5a3-f393-e0a9-e50e24dcca9e")) {
+                            if(!strcmp(service.characteristics[j].uuid.value, "6e400003-b5a3-f393-e0a9-e50e24dcca9e")) {
+                                printf("\n\n");
+                                signal(SIGINT, INThandler);
                                 
-                                if(rds_program_current && strcmp((char*)rds_program_current->ps, "") && !stnshown) {
-                                    printf("Stationname: %ls\n", rds_program_current->ps);
-                                    stnshown=true;
-                                }
+                                simpleble_peripheral_notify(peripheral, service.uuid,
+                                                            service.characteristics[j].uuid, peripheral_on_notify, NULL);
                                 
-                                // check if an RDS program is received and seek if not, or seek after 120 sec
-                                if(count==5 || count==120) {
-                                    if(rds_program_current==0 || (rds_program_current != 0 && rds_program_current->oda_tmc_sid==0) || count==120) {
-                                        simpleble_peripheral_write_command(peripheral, service.uuid, uuid_tx, (const uint8_t *)"up", 2);
-                                        printf((count==120)?"Seek after 120 seconds...\n":"Seek, no TMC program...\n");
-                                        if(rds_program_current) {
-                                            rds_program_current->ps[0]=0;
-                                            rds_program_current->oda_tmc_sid=0;
-                                        }
-                                        count=0;
-                                        stnshown=false;
+                                int count=0;
+                                bool stnshown = false;
+                                while(!disconnected) {
+                                    SLEEP_SEC(1);
+                                    
+                                    if(rds_program_current && strcmp((char*)rds_program_current->ps, "") && !stnshown) {
+                                        printf("Stationname: %ls\n", rds_program_current->ps);
+                                        stnshown=true;
                                     }
+                                    
+                                    // check if an RDS program is received and seek if not, or seek after 120 sec
+                                    if(count==5 || count==120) {
+                                        if(rds_program_current==0 || (rds_program_current != 0 && rds_program_current->oda_tmc_sid==0) || count==120) {
+                                            simpleble_peripheral_write_command(peripheral, service.uuid, uuid_tx, (const uint8_t *)"up", 2);
+                                            printf((count==120)?"Seek after 120 seconds...\n":"Seek, no TMC program...\n");
+                                            if(rds_program_current) {
+                                                rds_program_current->ps[0]=0;
+                                                rds_program_current->oda_tmc_sid=0;
+                                            }
+                                            count=0;
+                                            stnshown=false;
+                                        }
+                                    }
+                                    count++;
                                 }
-                                count++;
                             }
                         }
                     }
                 }
             }
+            
+            // Let's not forget to release the associated handles and memory
+            simpleble_peripheral_release_handle(peripheral);
+            simpleble_free(peripheral_address);
+            simpleble_free(peripheral_identifier);
         }
-    
-        // Let's not forget to release the associated handles and memory
-        simpleble_peripheral_release_handle(peripheral);
-        simpleble_free(peripheral_address);
-        simpleble_free(peripheral_identifier);
+        
+        
+        // Let's not forget to release the associated handle.
+        simpleble_adapter_release_handle(adapter);
     }
-    
-    
-    // Let's not forget to release the associated handle.
-    simpleble_adapter_release_handle(adapter);
     return 0;
 }
 
