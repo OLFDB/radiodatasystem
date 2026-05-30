@@ -814,22 +814,24 @@ static void tmc_print_message(rds_oda_tmc_message_t *msg)
                 char* cleanedtxt=malloc(strlen(t) + length/10+2);
                 if(pos-&t[0]>0)
                     strncpy(cleanedtxt, &t[0], pos -&t[0]);
-                else
+                else {
                     cleanedtxt[0]='\0';
-                char buf[100];
-                snprintf(buf, snprintf(NULL, 0, "%ikm", length)+1, "%ikm", length);
-                strcat(cleanedtxt, buf);
-                strcat(&cleanedtxt[strlen(cleanedtxt)], pos+3);
-                printf("%s", cleanedtxt);
-                free(cleanedtxt);
-                length=0;
+                    char buf[100];
+                    snprintf(buf, snprintf(NULL, 0, "%ikm", length)+1, "%ikm", length);
+                    strcat(cleanedtxt, buf);
+                    strcat(&cleanedtxt[strlen(cleanedtxt)], pos+3);
+                    printf("%s", cleanedtxt);
+                    free(cleanedtxt);
+                    length=0;
+                }
             } else {
                 char* cleanedtxt=malloc(strlen(t));
-                if(pos-&t[0]>0) {
+                if((pos-&t[0])>0) {
                     strncpy(cleanedtxt, &t[0], pos - &t[0]); // "'Teil 1 '(L) Teil 2"
-                    strcat(cleanedtxt, &t[pos - &t[0] + 4]);  // "Teil 1 (L) 'Teil 2'"
+                    cleanedtxt[pos - &t[0]]=0;
+                    strcat(cleanedtxt, pos + 4);  // "Teil 1 (L) 'Teil 2'"
                 } else {
-                    strcpy(cleanedtxt, &t[3]); // "(L) Der Rest"
+                    strcpy(cleanedtxt, &t[4]); // "(L) 'Der Rest'"
                 }
                 printf("%s", cleanedtxt);
                 free(cleanedtxt);
