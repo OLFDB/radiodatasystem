@@ -42,6 +42,10 @@ Sweden		https://bransch.trafikverket.se/en/startpage/operations/Operations-road/
 		Registration required
 		Database name E3_E_01
 		No FM TMC service broadcasted anymore
+Czech Republic  https://dopravniinfo.gov.cz/en/pages/localization-database
+		Registration and Terms of use to be signed
+        	FM-DX source: ws://45.92.238.5:58080/rds 88.5MHz
+		Database name E2_2_01
 
 ====================================================================================================================================
 Simple BLE warning:
