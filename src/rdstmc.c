@@ -945,8 +945,6 @@ int main(int argc, char *argv[])
 	int retval = 0;
     extern unsigned int eccprm;
     extern char * locprm;
-    
-    locprm = -1;
 
 	while ((opt = getopt(argc, argv, "f:e:l:")) != -1) {
 		switch (opt) {
